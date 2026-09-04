@@ -1,0 +1,2 @@
+# Optional: only the Claude Code local-session bridge needs this package.
+claude-agent-sdk==0.2.152

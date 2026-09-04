@@ -1,5 +1,7 @@
 # Batch naming for project tasks
 
+This workflow and its execution-record format are for Codex only; Claude Code and other agents must not use it for batch writes or restoration.
+
 Use only when the user explicitly authorizes naming tasks in a project or a specified set. Once authorization is clear, proceed after the checks below; requests for a plan or preview still produce suggestions only.
 
 ## Build a complete inventory of the requested scope

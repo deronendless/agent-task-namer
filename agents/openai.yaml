@@ -1,7 +1,7 @@
 interface:
-  display_name: "Codex Task Namer"
-  short_description: "Name and organize Codex tasks in the user's language"
-  default_prompt: "Use $codex-task-namer to name this task as emoji Type | YYMMDD | Topic, following the language of its main user request."
+  display_name: "Agent Task Namer"
+  short_description: "Consistent task titles in the user's language"
+  default_prompt: "Use $codex-task-namer to name this task as emoji Type | YYMMDD | Topic in its main request's language, or suggest a title if this client cannot rename it."
 
 policy:
   allow_implicit_invocation: true

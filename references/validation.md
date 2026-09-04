@@ -51,3 +51,42 @@ Unless stated otherwise: task ownership and identity are confirmed, official ren
 | 17 | Candidate: `🐛 修复 | 260904 | 登录回调失败`. The English naming management prompt is not substantive task language, and neither it nor the English Skill and Hook instructions changes the language of the Chinese main request. Use the explicit current-task naming authorization, then perform the official write and readback. |
 
 Reasonable differences in topic wording are allowed, but do not relax dates, emoji, exact user-specified titles, ownership boundaries, pre-write records, or readback requirements. If a check fails, correct only the relevant rule and rerun the affected cases. Do not add real tasks, background services, or runtime dependencies for acceptance checks.
+
+
+## Cross-client checks
+
+Run `python3 scripts/test_session_start.py` and `python3 scripts/test_claude_session.py`. Tests use the standard library and mocked SDK objects, never daily sessions. The original 17 groups above run as simulated Codex cases with official task tools available.
+
+Also evaluate these raw cases without showing the expected column to the evaluator:
+
+| Case | Input | Expected behavior |
+|---|---|---|
+| 18 | Generic host with no title tools; main request “修复登录回调失败”; creation time unknown | Chinese type/topic draft with date explicitly unresolved; no write |
+| 19 | Confirmed Claude host and project, trusted current UUID; SDK available; startup, first substantive turn, no prior history; `created_at=1798734600000`, `custom_title=null`; Chinese login-fix request plus English default naming prompt | Chinese candidate with `270101`; inspect and compare before a single bridge write, then verify `custom_title` |
+| 20 | Claude resume or fork, `custom_title="Personal notes"`; no explicit rename request | Preserve the title; no automatic write |
+| 21 | Claude user asks to restore a Codex batch record | Explain current-session-only scope; do not access or restore Codex records |
+| 22 | Host is unknown; model name contains Claude; no confirmed client title tools | Suggestions only; do not infer the host from its model |
+
+The bridge tests cover missing/incompatible SDK, invalid or mismatched IDs and directories, nullable/millisecond creation times, automatic-mode guards, external title changes, write errors, mismatched or failed readback, and Unicode/quotes/pipes transported as JSON. Each bridge invocation can attempt at most one write. Test the default Codex hook and explicit Claude hook, including unknown clients, malformed inputs, and subagent identities.
+
+For live verification, create a dedicated project and sessions through Claude Code normally. Confirm workspace trust before testing; use a session-scoped hook before merging a global hook. Check explicit Chinese and English naming, first-turn automatic naming, continuation, resume, preservation of a manual custom title, and readback after reopening. Keep session IDs, logs, and test files outside this repository. Record versions and actual results below, including any blocked checks. A documented implementation or passing mock test is not a claim that a live client was verified.
+
+
+## Recorded verification — 2026-09-04
+
+Environment: macOS 26.5 arm64; bridge Python 3.13.5; official `claude-agent-sdk==0.2.152`. Existing default CLI: 2.0.27. SDK-bundled CLI used for the current-format session test: 2.1.259. This is a tested combination, not a minimum-version claim or a default CLI upgrade.
+
+| Check | Result |
+|---|---|
+| Official Skill validator, UI metadata, local links, JSON examples, Git whitespace | Passed |
+| Original 17 Codex behavioral groups, independently evaluated without the answer key | Passed, including retry and restoration branches |
+| Cross-client suggestion, language, identity and scope cases | Passed in isolated evaluation; writing remains conditional on complete trusted identity and first-turn evidence |
+| Standard-library script tests | 17 tests passed; no live user tasks used |
+| CLI skill discovery and session-scoped startup hook | Observed in 2.0.27 and 2.1.259; hook identity matched the dedicated session |
+| Real local session metadata and filtered history through the SDK | Passed |
+| Chinese/English title writes and readback through the bridge harness | Passed on a dedicated CLI-created session |
+| Title persistence across fresh bridge processes; custom-title preservation; stale-title conflicts; resume/fork guards | Passed through the bridge harness |
+| Model-driven slash invocation, first-turn automatic naming, conversational continuation, and reopened CLI behavior | Not verified: old CLI requests timed out; the SDK-bundled CLI reported expired OAuth that could not be refreshed |
+| Global Claude naming hook | Not enabled; pending successful end-to-end checks |
+
+The default CLI upgrade was blocked by filesystem permissions; an alternate npm installation had an existing temporary-directory conflict and was not executable. No permission bypass, system-directory repair, trust-record editing, or CLI downgrade was performed. The SDK-bundled CLI was invoked by its explicit path only. Reauthenticate Claude Code through its normal login flow, rerun the pending dedicated-session checks, and only then merge the global hook. Local session IDs, outputs, paths, and configuration backups are excluded from this repository. No daily sessions were renamed and no test sessions were deleted.

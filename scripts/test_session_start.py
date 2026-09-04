@@ -11,9 +11,9 @@ SCRIPT = Path(__file__).with_name("session_start.py")
 
 
 class SessionStartTest(unittest.TestCase):
-    def run_hook(self, event):
+    def run_hook(self, event, *args):
         return subprocess.run(
-            [sys.executable, str(SCRIPT)], input=event, text=True,
+            [sys.executable, str(SCRIPT), *args], input=event, text=True,
             capture_output=True, check=True,
         )
 
@@ -39,6 +39,27 @@ class SessionStartTest(unittest.TestCase):
         })):
             with self.subTest(payload=payload):
                 self.assertEqual(self.run_hook(payload).stdout, "")
+
+    def test_claude_and_subagent_routing(self):
+        event = {"hook_event_name": "SessionStart", "source": "startup",
+                 "session_id": "abc123", "cwd": str(SCRIPT.parent),
+                 "agent_type": "custom-main-agent"}
+        for source in ("startup", "resume", "clear", "compact", "fork"):
+            event["source"] = source
+            result = self.run_hook(json.dumps(event), "--client", "claude-code")
+            context = json.loads(result.stdout)["hookSpecificOutput"]["additionalContext"]
+            self.assertIn("Claude Code", context)
+            self.assertIn('"source": "' + source + '"', context)
+            self.assertNotIn("set_thread_title", context)
+        event["source"] = "startup"
+        for field in ("agent_id", "parent_tool_use_id"):
+            for args in ((), ("--client", "claude-code")):
+                self.assertEqual(self.run_hook(json.dumps({**event, field: "child"}), *args).stdout, "")
+        self.assertEqual(self.run_hook(json.dumps({**event, "cwd": "relative"}), "--client", "claude-code").stdout, "")
+        result = subprocess.run([sys.executable, str(SCRIPT), "--client", "unknown"],
+                                input=json.dumps(event), text=True, capture_output=True)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertEqual(result.stdout, "")
 
 
 if __name__ == "__main__":

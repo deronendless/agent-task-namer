@@ -1,0 +1,7 @@
+interface:
+  display_name: "Codex 任务命名"
+  short_description: "自动识别用户提问语言，按 emoji 类型、六位创建日期与主题命名或批量整理任务"
+  default_prompt: "使用 $codex-task-namer 自动识别本任务用户提问的语言，按“emoji 类型 | YYMMDD | 主题”整理当前任务标题。"
+
+policy:
+  allow_implicit_invocation: true

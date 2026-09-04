@@ -1,0 +1,11 @@
+.DS_Store
+__pycache__/
+*.py[cod]
+.venv/
+.env
+.env.*
+
+# Local Codex configuration and private batch records
+hooks.json
+config.toml
+task-naming-runs/

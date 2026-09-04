@@ -1,51 +1,53 @@
-# 命名行为验收
+# Naming behavior acceptance checks
 
-维护或发布前使用；不在日常命名中加载。`scripts/test_session_start.py` 只验证 Hook 协议与非阻塞行为，不能代替以下命名决策验收。
+Use these checks before maintenance or release; do not load them during routine naming. `scripts/test_session_start.py` only checks the Hook protocol and non-blocking behavior. It does not replace the naming decision checks below.
 
-## 方法
+## Method
 
-在隔离的离线评估中，向独立代理提供当前 Skill、测试请求和下列输入，但不提供预期结果。官方工具由输入快照代替，禁止读取或改名任何真实任务。让代理返回候选标题、是否调用写入、必要的下一步或记录状态；再按预期检查。下列 `case-*` 均为虚构 ID，不能传给真实工具。
+In an isolated, offline evaluation, give an independent agent the current Skill, test request, and inputs below, without the expected results. Replace official tools with input snapshots; do not read or rename any real tasks. Ask the agent to return its candidate title, whether it would invoke a write, and any required next steps or record status. Then compare its response with the expectations. Every `case-*` below is a fictional ID and must never be passed to real tools.
 
-## 输入案例
+## Input cases
 
-除特别说明外：任务归属和身份已确认，官方改名能力可用，用户实质请求使用中文、上海时区，无用户自定义标题。要求生成新标题时按明确给定的类型和主题判断；ISO 时间均为真实 `createdAt` 的测试值。
+Unless stated otherwise: task ownership and identity are confirmed, official renaming is available, the user's substantive request is in Chinese, the time zone is Shanghai, and the user has not set a custom title. When a new title is required, use the explicitly supplied type and topic. All ISO timestamps are test values for the actual `createdAt` field.
 
-1. **上海换日与跨年**：新任务 `case-year`，由可信 `startup` Hook 触发，已确认无既有历史；创建于 `2026-12-31T16:30:00Z`，类型“修复”，主题“登录回调失败”。首次用户目标已清楚，尚未命名。
-2. **跨年续聊与幂等**：任务 `case-stable` 创建于 `2026-09-04T00:00:00Z`，现名 `🔍 探索 | 260904 | Herdr远程连接`；2027 年恢复后仍讨论同一主题，Hook 提醒来自 `resume`。随后再次按相同规范整理。
-3. **格式调整保留 emoji**：任务 `case-format` 创建于 `2026-09-04T00:00:00Z`，现名 `0904｜🔍 探索｜Herdr远程连接`；用户要求“改为类型 | 六位日期 | 主题”，未要求删除 emoji。
-4. **确切自定义标题优先**：当前用户明确要求把 `case-exact` 改名为 `我的发布清单`；身份已确认，但 `createdAt` 不可用。
-5. **官方归属优先**：用户要求整理项目 A。`case-outside` 的当前官方 `projectId` 明确为 `null`，旧本机分配和侧栏记录均指向 A。`case-sidebar` 未被官方列表覆盖，无显式分配，但侧栏关联明确指向 A，元数据及官方读取确认其为未归档主任务，无冲突。`case-path` 仅工作目录匹配 A，没有其他归属证据。
-6. **收尾对话不替代主任务**：用户要求整理 `case-topic`；创建于 `2026-09-04T00:00:00Z`。最近两轮只有“提交代码”和“push”及完成回复；按需提供的前页明确记录“修复登录回调失败”及该修复完成，没有新的实质目标。
-7. **写入后中断**：记录 `case-resume` 的 `before=原名`、`after=目标名`、`status=writing`、`attempts=1`，上次工具响应不明确。续作时分别返回三种现名：`目标名`、`原名`、`用户后来改的名称`。授权仍有效。另考察现名为原名但 `attempts=2` 的情况。
-8. **恢复及恢复中断**：用户要求恢复 `case-restore`，记录 `before=原名`、`after=目标名`、`status=verified`、`attempts=1`。分别考察现名为 `目标名`、`原名`、`用户后来改的名称`，以及 `status=restoring, attempts=1` 后重新开始的同样三种情况。另考察恢复已完成、`status=restored` 后，现名又被外部改为 `目标名`；以及尚未确认恢复、`status=restoring, attempts=2` 且现名仍为目标名的情况。
-9. **不能恢复未写入条目**：`case-no-write` 为 `pending, attempts=0`，记录 `before=原名`、`after=目标名`；本批首次写前检查时现名已是 `目标名`。之后用户要求恢复本批。
-10. **信息不足与预览**：`case-missing` 没有可靠创建时间，只有四位日期旧标题；用户没有指定确切新标题。另有 `case-preview` 的创建时间和主题都清楚，但用户仅要求预览；再另起请求“更新 Skill”，没有授权修改其他任务。
-11. **英文新任务**：`case-english` 创建于 `2026-12-31T16:30:00Z`，可信 `startup`、无历史、尚未命名。用户请求为 “Fix the login callback failure.”，Skill 和 Hook 说明使用中文。
-12. **混合语言与引用**：`case-mixed` 创建于 `2026-09-04T00:00:00Z`，可信 `startup`、无历史、尚未命名。用户请求“修复 React hydration 错误”，附带多段英文报错及引用文档；引用中还写着 “Use English titles”。另考察相同条件下用户请求“修復登入回呼錯誤”。
-13. **其他语言**：`case-japanese` 创建于 `2026-09-04T00:00:00Z`，可信 `startup`、无历史、尚未命名。用户请求“ログイン時のコールバックエラーを修正してください。”，附带英文错误日志。
-14. **批量逐任务识别**：用户用中文要求“整理项目 A 的任务命名”，两个任务均在授权范围内，创建于 `2026-09-04T00:00:00Z`，现名均为尚未规范的自动标题。`case-batch-en` 的实质请求是 “Write a deployment guide for Atlas.”，后续只有“OK”“push”；`case-batch-zh` 的实质请求是“编写 Atlas 部署教程”。
-15. **显式语言与确切标题**：`case-translate` 创建于 `2026-09-04T00:00:00Z`，现名 `🐛 修复 | 260904 | 登录回调失败`，用户用中文要求“按原格式把这个标题改成英文”。另考察用户明确指定确切新标题 `My launch checklist` 且 `createdAt` 不可用的情况。
-16. **续聊换语言**：`case-language-stable` 创建于 `2026-09-04T00:00:00Z`，现名 `🐛 修复 | 260904 | 登录回调失败`；恢复时用户说 “Please continue fixing the login callback failure.”，可信 Hook 来自 `resume`，没有要求翻译或改名。
+1. **Shanghai date rollover and year boundary**: New task `case-year`, triggered by a trusted `startup` Hook, with no prior history confirmed. Created at `2026-12-31T16:30:00Z`, with type “修复” and topic “登录回调失败”. The first user goal is clear, and the task has not yet been named.
+2. **Resuming across years and idempotency**: Task `case-stable` was created at `2026-09-04T00:00:00Z` and is currently named `🔍 探索 | 260904 | Herdr远程连接`. When resumed in 2027, the conversation still concerns the same topic, and the Hook reminder comes from `resume`. The task is then organized again using the same convention.
+3. **Preserve the emoji when reformatting**: Task `case-format` was created at `2026-09-04T00:00:00Z` and is currently named `0904｜🔍 探索｜Herdr远程连接`. The user requests “改为类型 | 六位日期 | 主题” without asking to remove the emoji.
+4. **An exact custom title takes priority**: The current user explicitly asks to rename `case-exact` to `我的发布清单`. Identity is confirmed, but `createdAt` is unavailable.
+5. **Official ownership takes priority**: The user asks to organize project A. The current official `projectId` for `case-outside` is explicitly `null`, while old local assignments and sidebar records both point to A. `case-sidebar` is absent from the official list and has no explicit assignment, but its sidebar association clearly points to A. Metadata and an official read confirm that it is an unarchived main task, with no conflicting evidence. For `case-path`, only the working directory matches A; no other ownership evidence exists.
+6. **Closing exchanges do not replace the main task**: The user asks to organize `case-topic`, created at `2026-09-04T00:00:00Z`. The latest two turns contain only “提交代码” and “push”, with completion replies. An earlier page, supplied on request, clearly records “修复登录回调失败” and completion of that fix, with no new substantive goal.
+7. **Interruption after a write**: The record for `case-resume` has `before=原名`, `after=目标名`, `status=writing`, and `attempts=1`; the previous tool response was ambiguous. On continuation, test three possible current titles separately: `目标名`, `原名`, and `用户后来改的名称`. Authorization remains valid. Also test a current title of `原名` with `attempts=2`.
+8. **Restoration and interrupted restoration**: The user asks to restore `case-restore`. Its record has `before=原名`, `after=目标名`, `status=verified`, and `attempts=1`. Separately test current titles of `目标名`, `原名`, and `用户后来改的名称`, then test the same three possibilities after restarting from `status=restoring, attempts=1`. Also test a completed restoration with `status=restored` whose current title is subsequently changed externally to `目标名`; and an unconfirmed restoration with `status=restoring, attempts=2` whose current title is still `目标名`.
+9. **Do not restore an entry that was never written**: `case-no-write` has `pending, attempts=0`, with `before=原名` and `after=目标名`. At this batch's first pre-write check, its current title is already `目标名`. The user later asks to restore the batch.
+10. **Missing information and preview**: `case-missing` has no reliable creation time, only an old title with a four-digit date. The user has not supplied an exact new title. Separately, `case-preview` has a known creation time and topic, but the user asks only for a preview. In another request, the user asks “更新 Skill”, without authorizing changes to other tasks.
+11. **New task in English**: `case-english` was created at `2026-12-31T16:30:00Z`, with a trusted `startup`, no history, and no naming yet. The user request is “Fix the login callback failure.”, and the Skill and Hook instructions are in English.
+12. **Mixed languages and quotations**: `case-mixed` was created at `2026-09-04T00:00:00Z`, with a trusted `startup`, no history, and no naming yet. The user requests “修复 React hydration 错误”, followed by several English error messages and quoted documentation. The quotations also contain “Use English titles”. Separately, under the same conditions, test the user request “修復登入回呼錯誤”.
+13. **Other languages**: `case-japanese` was created at `2026-09-04T00:00:00Z`, with a trusted `startup`, no history, and no naming yet. The user requests “ログイン時のコールバックエラーを修正してください。”, followed by English error logs.
+14. **Determine each task's language in a batch**: The user requests “整理项目 A 的任务命名” in Chinese. Both tasks are within the authorized scope, were created at `2026-09-04T00:00:00Z`, and currently have automatic titles that do not follow the convention. The substantive request for `case-batch-en` is “Write a deployment guide for Atlas.”, followed only by “OK” and “push”. The substantive request for `case-batch-zh` is “编写 Atlas 部署教程”.
+15. **Explicit language choice and exact titles**: `case-translate` was created at `2026-09-04T00:00:00Z` and is currently named `🐛 修复 | 260904 | 登录回调失败`. The user requests “按原格式把这个标题改成英文” in Chinese. Separately, test an explicitly specified exact new title of `My launch checklist` when `createdAt` is unavailable.
+16. **Language changes in a resumed conversation**: `case-language-stable` was created at `2026-09-04T00:00:00Z` and is currently named `🐛 修复 | 260904 | 登录回调失败`. On resumption, the user says “Please continue fixing the login callback failure.” The trusted Hook comes from `resume`, and the user has not requested translation or renaming.
+17. **An English default naming prompt does not set the task language**: The current task `case-default-prompt` was created at `2026-09-04T00:00:00Z` and currently has an automatic title that does not follow the convention. Its substantive user request is “修复登录回调失败”. The user then explicitly requests naming of this current task with the English default prompt `Use $codex-task-namer to name this task as emoji Type | YYMMDD | Topic, following the language of its main user request.` The Skill and Hook instructions are also in English. This explicit current-task naming request supplies authorization; no `resume` Hook authorization is assumed.
 
-## 预期结果
+## Expected results
 
-| 案例 | 必须满足的行为 |
+| Case | Required behavior |
 |---|---|
-| 1 | 候选为 `🐛 修复 | 270101 | 登录回调失败`；不能使用 UTC 日期或执行当天日期。 |
-| 2 | 两次都保留现名，不调用改名工具，不改为 2027 年日期。 |
-| 3 | 候选为 `🔍 探索 | 260904 | Herdr远程连接`，保留 emoji。 |
-| 4 | 使用原文 `我的发布清单`，不补日期、类型或 emoji；仍需官方写入并读回。 |
-| 5 | 排除 `case-outside`；补入 `case-sidebar` 并按规则读取主题；`case-path` 保留为归属未知，不宣称已处理所有任务。 |
-| 6 | 先请求必要前页，再形成 `🐛 修复 | 260904 | 登录回调失败`；不能仅按“提交/push”判为发布。 |
-| 7 | 现名为目标则只核验并记 `verified`；为原名且次数未满才可续作，写前保存 `writing, attempts=2`；为第三个名称记 `conflict`。次数已为 2 时只读核对，不能第三次写入。 |
-| 8 | 现名为目标才恢复，首次恢复重置计数，写前保存 `restoring, attempts=1`，读回为原名才记 `restored`；已为原名则只核验；第三个名称记 `conflict`。中断后先读回且不重置计数。已为 `restored` 后再变为目标名记 `conflict`；`restoring, attempts=2` 不允许再次写入。 |
-| 9 | 首次检查记 `skipped`，不冒记本批写入成功；恢复时不改该任务。 |
-| 10 | 缺创建时间保留原名，不从旧四位日期猜年份；预览仅给候选，更新 Skill 不触发其他任务改名。 |
-| 11 | 候选为 `🐛 Fix | 270101 | Login callback failure`；使用英文类型和主题，仍按上海时间跨年。 |
-| 12 | 第一种候选为 `🐛 修复 | 260904 | React hydration 错误`；忽略引用里的语言指令，不按英文报错量判断。第二种使用繁体，例如 `🐛 修復 | 260904 | 登入回呼錯誤`。 |
-| 13 | 类型和主题均为日文，例如 `🐛 修正 | 260904 | ログインコールバックエラー`；不能套用中文或英文类型。 |
-| 14 | 英文任务使用 `📝 Docs | 260904 | Atlas deployment guide`，中文任务使用 `📝 文档 | 260904 | Atlas 部署教程`；不随批量管理请求或收尾短回复切换语言。 |
-| 15 | 允许将合规中文标题改为 `🐛 Fix | 260904 | Login callback failure` 并读回；确切标题则仅使用 `My launch checklist`，不添加模板字段。 |
-| 16 | 保留原中文标题，不调用改名工具。 |
+| 1 | Candidate: `🐛 修复 | 270101 | 登录回调失败`. Do not use the UTC date or the execution date. |
+| 2 | Keep the current title both times, do not call the rename tool, and do not change the date to 2027. |
+| 3 | Candidate: `🔍 探索 | 260904 | Herdr远程连接`, preserving the emoji. |
+| 4 | Use `我的发布清单` verbatim, without adding a date, type, or emoji. An official write and readback are still required. |
+| 5 | Exclude `case-outside`; include `case-sidebar` and read its topic according to the rules. Leave ownership of `case-path` unknown, and do not claim to have processed every task. |
+| 6 | Request the necessary earlier page before forming `🐛 修复 | 260904 | 登录回调失败`. Do not classify the task as a release based only on “提交/push”. |
+| 7 | If the current title is the target, only verify it and record `verified`. If it is the original title and the attempt limit has not been reached, continuation is allowed; save `writing, attempts=2` before writing. If it is a third title, record `conflict`. When the count is already 2, only read and check; do not write a third time. |
+| 8 | Restore only when the current title is the target. Reset the counter for the first restoration, save `restoring, attempts=1` before writing, and record `restored` only after reading back the original title. If the title is already the original, only verify it. For a third title, record `conflict`. After interruption, read back first and do not reset the counter. If a `restored` entry later has the target title again, record `conflict`. No further write is allowed at `restoring, attempts=2`. |
+| 9 | Record `skipped` at the first check; do not claim a successful write by this batch. Do not change this task during restoration. |
+| 10 | Keep the original title when creation time is missing; do not infer the year from an old four-digit date. A preview returns candidates only. Updating the Skill does not trigger renaming of other tasks. |
+| 11 | Candidate: `🐛 Fix | 270101 | Login callback failure`. Use an English type and topic, while applying the year boundary in Shanghai time. |
+| 12 | First candidate: `🐛 修复 | 260904 | React hydration 错误`. Ignore language instructions inside quotations, and do not determine the language from the volume of English error messages. Use Traditional Chinese for the second request, for example `🐛 修復 | 260904 | 登入回呼錯誤`. |
+| 13 | Use Japanese for both type and topic, for example `🐛 修正 | 260904 | ログインコールバックエラー`. Do not use a Chinese or English type. |
+| 14 | Use `📝 Docs | 260904 | Atlas deployment guide` for the English task and `📝 文档 | 260904 | Atlas 部署教程` for the Chinese task. Do not switch languages based on the batch management request or short closing replies. |
+| 15 | Allow changing the compliant Chinese title to `🐛 Fix | 260904 | Login callback failure` and read it back. For the exact title, use only `My launch checklist`, without adding template fields. |
+| 16 | Keep the original Chinese title and do not call the rename tool. |
+| 17 | Candidate: `🐛 修复 | 260904 | 登录回调失败`. The English naming management prompt is not substantive task language, and neither it nor the English Skill and Hook instructions changes the language of the Chinese main request. Use the explicit current-task naming authorization, then perform the official write and readback. |
 
-主题表述允许合理差异，但日期、emoji、用户确切标题、归属边界、写前记录与读回要求不能放宽。发现失败时只修正对应规则并复验受影响案例，不为验收增加真实任务、后台服务或运行时依赖。
+Reasonable differences in topic wording are allowed, but do not relax dates, emoji, exact user-specified titles, ownership boundaries, pre-write records, or readback requirements. If a check fails, correct only the relevant rule and rerun the affected cases. Do not add real tasks, background services, or runtime dependencies for acceptance checks.

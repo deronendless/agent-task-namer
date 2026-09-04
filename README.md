@@ -58,4 +58,4 @@ This requires separate setup and client support; installation alone does not ena
 
 [Detailed rules](SKILL.md) · [Batch rename and restore](references/batch.md) · [Validation](references/validation.md) · [MIT License](LICENSE)
 
-Community skill; not an official OpenAI product. Detailed reference documents are currently in Chinese.
+Community skill; not an official OpenAI product.

@@ -1,23 +1,18 @@
-# 自动触发的安装与维护
+# Automatic naming: setup and maintenance
 
-仅在用户要求安装、启用、调整或移除自动命名时读取。日常改名不需要配置 Hook。
+Read this only when the user requests installing, enabling, changing, or removing automatic naming. Routine renaming does not require hook configuration.
 
-## 运行方式
+## How it works
 
-单独安装 Skill 只提供显式调用和按描述匹配。`scripts/session_start.py` 为
-Codex 的 `SessionStart` 输出 `hookSpecificOutput.additionalContext`，提醒主代理
-读取本 Skill。它不调用模型、不读取聊天全文、不执行改名、不保存状态。
-`startup`、`resume`、`clear`、`compact` 都只是会话事件，不能据此推定新任务或创建日期。
-Skill 决定是否需要命名，并通过当前环境的官方工具执行。
+Installing the skill alone provides explicit invocation and matching by its description. For Codex's `SessionStart` event, `scripts/session_start.py` emits `hookSpecificOutput.additionalContext` to remind the main agent to read this skill. It does not call a model, read conversation transcripts, rename tasks, or save state.
 
-## 本机配置
+`startup`, `resume`, `clear`, and `compact` are session events only; they do not establish that a task is new or when it was created. The skill decides whether naming is needed and performs it through the official tools available in the current environment.
 
-Hook 可放在 `$CODEX_HOME/hooks.json`（通常为 `~/.codex/hooks.json`），或者对应的
-`config.toml` 中。添加前检查现有定义，保留其他 Hook，避免重复注册本脚本。
-多个来源的 Hook 会合并执行，不应以覆盖整个文件的方式安装。
+## Local configuration
 
-以下是配置形状；安装时将路径替换为本机实际绝对路径，使用已验证的 Python 3
-解释器，并正确引用路径中的空格：
+The hook can be configured in `$CODEX_HOME/hooks.json` (usually `~/.codex/hooks.json`) or the corresponding `config.toml`. Inspect existing definitions before adding it, preserve other hooks, and avoid registering this script more than once. Hooks from multiple sources are merged for execution; do not install by overwriting the entire configuration file.
+
+The example below shows the configuration structure. During installation, replace the path with the actual absolute path on the user's machine, use a verified Python 3 interpreter, and quote paths containing spaces correctly:
 
 ```json
 {
@@ -35,20 +30,14 @@ Hook 可放在 `$CODEX_HOME/hooks.json`（通常为 `~/.codex/hooks.json`），�
 }
 ```
 
-非托管 Hook 必须由用户在 Codex CLI 的 `/hooks` 中审阅并信任。新的或更改后的
-Hook 定义在受信任前不会运行。不要编辑信任记录、使用绕过信任参数，或声称保存
-配置等于启用成功。若当前环境禁用了 Hook，先说明现状，遵循用户是否启用的选择。
+Unmanaged hooks must be reviewed and trusted by the user through `/hooks` in the Codex CLI. New or changed hook definitions will not run until trusted. Do not edit trust records, use trust-bypass arguments, or claim that saving configuration means activation succeeded. If hooks are disabled in the current environment, explain that state first and follow the user's choice about enabling them.
 
-## 验证与迁移
+## Verification and migration
 
-1. 运行 `python3 scripts/test_session_start.py` 验证事件输入、JSON 输出与非阻塞行为。
-2. 用户信任 Hook 后，在支持任务工具的 Codex 客户端验证新任务首次回复会命名，
-   普通续聊不重复改名，子代理不改父任务，恢复旧任务不批量改名。
-3. 只有实际触发验证成功且用户已要求迁移时，才移除全局 `AGENTS.md` 中重复的
-   命名段落；保留其他个性化指令。自动触发仍依赖宿主、Hook 信任和可用改名工具。
+1. Run `python3 scripts/test_session_start.py` to verify event inputs, JSON output, and non-blocking behavior.
+2. After the user trusts the hook, verify in a Codex client with task tools that the first response in a new task names it, ordinary follow-up conversation does not repeatedly rename it, subagents do not rename the parent task, and resuming an old task does not trigger batch renaming.
+3. Remove duplicate naming instructions from the global `AGENTS.md` only after an actual trigger has been successfully verified and the user has requested migration. Preserve other personalization instructions. Automatic triggering still depends on the host, hook trust, and available title-writing tools.
 
-停用自动命名时，在 `/hooks` 禁用本 Hook，或只移除匹配本脚本的配置项。
-Skill 仍可按需使用。不需要定时任务、后台服务或直接修改 Codex 数据库。
+To disable automatic naming, disable this hook in `/hooks` or remove only the configuration entry for this script. The skill remains available on demand. No scheduled tasks, background services, or direct changes to the Codex database are needed.
 
-官方参考：[Skills](https://learn.chatgpt.com/docs/build-skills)、
-[Hooks](https://learn.chatgpt.com/docs/hooks)。
+Official references: [Skills](https://learn.chatgpt.com/docs/build-skills), [Hooks](https://learn.chatgpt.com/docs/hooks).

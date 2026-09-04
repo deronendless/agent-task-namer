@@ -1,75 +1,75 @@
-# 项目任务批量命名
+# Batch naming for project tasks
 
-仅在用户明确授权一个项目或指定任务集合的命名时使用。只要授权已经明确，以下检查完成后即可执行；“先出方案”“预览”仍只产生建议。
+Use only when the user explicitly authorizes naming tasks in a project or a specified set. Once authorization is clear, proceed after the checks below; requests for a plan or preview still produce suggestions only.
 
-## 建立范围完整的清单
+## Build a complete inventory of the requested scope
 
-- 以应用中的项目归属或用户指定的任务集合确定范围；区分主任务、子代理、归档任务和其他项目。默认不包含子代理、归档和其他项目；用户明确指定时可纳入归档主任务。
-- 先用官方 `list_threads`／项目工具核对列表。返回条数可能受上限约束：本机曾在项目实际有 89 个任务时只返回近期 50 个，即使请求更大 `limit` 也未列全。这个现象是需要检查完整性的依据，不是永久写死的数量或接口保证。
-- 归属证据按以下优先级判断：当前官方工具明确返回的 `projectId` 优先，包括明确的 `null`（不属于项目）；字段缺失或任务未被列表覆盖不等于 `null`。旧本机记录不能覆盖当前官方归属。
-- 官方列表未覆盖的任务，可在已有本机读取权限内只读检查项目及任务元数据。既检查显式分配，也检查侧栏项目任务关联；不能把显式分配表当作完整清单。不同版本字段可能变化，按实际结构读取，不依赖固定数据库版本或路径。元数据相互冲突且无法确定当前归属时跳过；工作目录匹配只能提供线索，不能单独证明归属。
-- 用 ID 去重并核对范围计数。工具不可分页且无法可靠补齐时，只处理已确认集合，明确剩余范围未知；不能把最近列表称为“所有任务”。不为凑齐数量读取其他项目。
+- Determine scope from project membership in the app or the task set specified by the user. Distinguish main tasks, subagents, archived tasks, and other projects. Exclude subagents, archived tasks, and other projects by default; archived main tasks may be included when the user explicitly requests them.
+- Check the list using the official `list_threads` and project tools first. Results may be capped: in one local run, a project with 89 tasks returned only the 50 most recent tasks, even with a larger `limit`. This observation is a reason to check completeness, not a permanent count or API guarantee.
+- Apply this priority to membership evidence: an explicit `projectId` from the current official tools takes precedence, including an explicit `null` (no project membership). A missing field or a task absent from the list is not equivalent to `null`. Older local records must not override current official membership.
+- For tasks absent from the official list, you may inspect local project and task metadata read-only within existing access permissions. Check both explicit assignments and sidebar project-task associations; do not treat the explicit assignment table as a complete inventory. Fields may vary between versions, so inspect the actual structure rather than relying on a fixed database version or path. Skip conflicting metadata when current membership cannot be established. A matching working directory is only a clue, not proof of membership.
+- Deduplicate by ID and reconcile the scope counts. If the tools cannot paginate and the inventory cannot be completed reliably, process only the confirmed set and state that the remaining scope is unknown. Do not describe a recent-task list as "all tasks." Do not read other projects merely to reach an expected count.
 
-## 读取并提出标题
+## Read tasks and propose titles
 
-按小批次并行调用官方 `read_thread`，每个任务先用 `turnLimit: 2, includeOutputs: false`。两轮只是初始窗口；若只有确认、提交等收尾对话，按主文件的主任务定位规则追加必要历史。仅提取真实标题、`createdAt` 和支撑主题的用户目标／实际交付，不输出完整工具历史。
+Call the official `read_thread` in small parallel batches, starting each task with `turnLimit: 2, includeOutputs: false`. Two turns are only the initial window. If they contain only confirmations, commit requests, or other closing exchanges, read the necessary earlier context using the main skill's rules for identifying the substantive task. Extract only the actual title, `createdAt`, and the user goal or actual deliverable supporting the topic; do not output the full tool history.
 
-结合近期目标判断实际主题。早期的“了解某项目”可能已经发展为“编写部署教程”或“清理重复技能”，不机械保留最初标题。内容不足再翻页；只有失效图片且无可用文字时保留现名。明确的用户需求足以定题时，不要求必须存在最终答复。
+Use recent goals to identify the actual topic. An initial request to "learn about a project" may have developed into "write a deployment guide" or "remove duplicate skills"; do not mechanically preserve the initial title. Read another page if the content is insufficient. Keep the current title when only unavailable images remain and no useful text is available. A clear user request is enough to establish the topic; a final response is not required.
 
-使用主文件的语言、日期、类别、确切标题优先和幂等规则。逐任务根据实质用户请求判断标题语言，除非用户明确要求统一语言，不能直接沿用本次批量管理请求的语言。常规批量规范化不覆盖已知用户手工指定的标题；无法确认任务归属的条目先跳过。需要按模板命名时，才因创建时间、主要主题或语言不明跳过；用户本次明确指定确切新标题的条目无需这些推断信息。不阻止其他已确认条目。
+Apply the main skill's rules for language, dates, categories, exact-title precedence, and idempotence. Determine each task's title language from its substantive user request; do not use the language of the current batch-management request unless the user explicitly requests one language for the batch. Routine batch normalization must not overwrite known user-chosen titles. Skip entries whose project membership cannot be confirmed. Missing creation time, substantive topic, or language is a reason to skip only when naming by the template; entries with an exact new title explicitly specified by the user do not need those inferences. Continue with other confirmed entries.
 
-## 本地执行记录
+## Local execution record
 
-批量写入前保存一份 JSON 数组记录，之后逐项更新。记录放在本机独立目录（例如 `$CODEX_HOME/task-naming-runs/`，未设置时为 `~/.codex/task-naming-runs/`），最终提供路径。先写临时文件再原子替换，避免中断产生半份记录；记录保存或更新失败时停止后续写入，保留上次有效文件与候选。
+Before batch writes, save a JSON array as the execution record and update it after each entry. Store it in a separate local directory, such as `$CODEX_HOME/task-naming-runs/`, or `~/.codex/task-naming-runs/` when `CODEX_HOME` is unset, and provide the path in the final response. Write a temporary file first, then replace the record atomically so an interruption cannot leave a partial record. If saving or updating the record fails, stop further writes and preserve the last valid file and the candidates.
 
-数组中的每项仅保存以下字段；保留 `createdAt` 原始值，无法确定候选名时令 `after` 为 `null`、`status` 为 `skipped`：
+Each array entry contains only the fields below. Preserve the original `createdAt` value. If no candidate can be determined, set `after` to `null` and `status` to `skipped`:
 
 ```json
 {
-  "id": "任务 ID",
-  "before": "读取到的原标题",
+  "id": "task ID",
+  "before": "original title read from the task",
   "createdAt": 1788403983,
   "after": "🐛 修复 | 260903 | 登录回调失败",
   "status": "pending",
   "attempts": 0,
-  "reason": "简短命名依据或跳过原因"
+  "reason": "brief naming rationale or reason for skipping"
 }
 ```
 
-`before` 与 `after` 始终表示原名和候选名；恢复时也不交换。`attempts` 记录当前操作已经准备发出的写入次数，初值为 0；每次调用工具前递增并随状态落盘，最多 2 次（首次加一次针对性重试）。首次从改名转入恢复时才重置为 0，恢复中断不重置。旧记录缺少状态或次数时，先从可信执行记录补齐；不能确认则只读核对，不把未知次数当成 0。
+`before` and `after` always mean the original title and the candidate title; do not swap them during restoration. `attempts` counts writes prepared for the current operation and starts at 0. Increment it and persist it with the status before every write-tool call, with at most 2 attempts: the initial attempt and one targeted retry. Reset it to 0 only when first switching from naming to restoration; do not reset it after an interrupted restoration. If an older record lacks a status or attempt count, recover that information from trusted execution records first. If it cannot be confirmed, perform read-only checks; never treat an unknown count as 0.
 
-状态含义如下：
+The statuses mean:
 
-| status | 含义 |
+| status | Meaning |
 |---|---|
-| `pending` | 候选已保存，尚未尝试写入 |
-| `writing` | 已准备尝试或可能已写入，尚未读回确认 |
-| `verified` | 本批写入后已读回，现名等于 `after` |
-| `restoring` | 已准备恢复或可能已恢复，尚未读回确认 |
-| `restored` | 已读回确认现名为 `before` |
-| `skipped` | 未写入，已合规、无需处理或依据不足 |
-| `failed` | 确定尚未写入且本次无法继续，原因写入 `reason` |
-| `conflict` | 检测到外部改名或归属冲突，保留现状 |
+| `pending` | Candidate saved; no write attempted yet |
+| `writing` | A write has been prepared or may have occurred; read-back confirmation is pending |
+| `verified` | A write in this batch has been read back, and the current title equals `after` |
+| `restoring` | Restoration has been prepared or may have occurred; read-back confirmation is pending |
+| `restored` | A read-back confirms that the current title equals `before` |
+| `skipped` | No write made: already compliant, no action needed, or insufficient evidence |
+| `failed` | It is certain that no write occurred and this run cannot continue; record the reason in `reason` |
+| `conflict` | An external rename or membership conflict was detected; preserve the current state |
 
-记录只包含必要标题、时间、状态、尝试次数和短理由，不复制聊天、截图或工具全文。这是用户的本机运行记录，不加入 Skill 或 Git 仓库。
+Keep only the necessary titles, times, statuses, attempt counts, and short reasons. Do not copy conversations, screenshots, or full tool output. This is the user's local execution record; do not add it to the skill or a Git repository.
 
-## 执行与读回
+## Write and read back
 
-1. 执行前再次用官方工具读取现名，并核对当前归属。现名等于 `before` 才可继续；尚未尝试写入的条目若已等于 `after`，记为 `skipped`，不能冒记本批写入成功或以后恢复它。其他名称或归属冲突记为 `conflict`。内容已实质变化时先重新确定候选。
-2. **先将状态设为 `writing`、递增 `attempts` 并落盘，再调用改名工具。** 只通过官方 `set_thread_title`，使用已核实的 `threadId`；当前任务省略该参数。只读元数据补清单不授权修改数据库，不用 SQL、文件改写或模拟内部接口绕过工具限制。
-3. 用官方 `read_thread` 读回，现名等于 `after` 才记 `verified`。工具响应不明确、读回失败或仍为 `before` 时保留 `writing` 并说明原因；不能把工具返回成功当作核验成功。现名变为第三个名称时记 `conflict`，停止覆盖。独立读取可并行，依赖检查、记录落盘和写入按顺序执行。
-4. 中断续作或重试时先重新读取，不能只凭日志状态跳过核验：`writing` 条目等于 `after` 则记 `verified`，等于 `before`、仍在授权范围内且 `attempts < 2` 时才可继续；其他名称记 `conflict`。次数已达上限或仍不明确时保留未核验状态，续作不重置计数。`verified` 条目现名改变时也不自动重写；已恢复的批次不因笼统“继续”而再次改名。
-5. 最终根据读回后的记录，分别报告已核验、未写入跳过、冲突／失败、仍待核验及清单完整性。只有范围完整且没有未解决条目，才说明该范围处理完成；待核验不计作成功。
+1. Before execution, use the official tools to read the current title again and check current membership. Proceed only if the title equals `before`. If an entry with no prior write attempt already equals `after`, mark it `skipped`; do not claim it as a successful write by this batch or restore it later. Mark any other title or a membership conflict as `conflict`. If the content has materially changed, determine the candidate again first.
+2. **Set the status to `writing`, increment `attempts`, and persist the record before calling the rename tool.** Use only the official `set_thread_title` with the verified `threadId`; omit that argument for the current task. Read-only metadata inspection to complete the inventory does not authorize database changes. Do not use SQL, file edits, or simulated internal APIs to bypass tool restrictions.
+3. Read back with the official `read_thread`; mark `verified` only if the current title equals `after`. If the tool response is ambiguous, read-back fails, or the title still equals `before`, keep `writing` and explain why. A successful tool response is not successful verification. If the current title becomes a third title, mark `conflict` and stop overwriting it. Independent reads may run in parallel; dependent checks, record persistence, and writes must run in order.
+4. When resuming after interruption or retrying, read again first; never skip verification based only on the log status. For a `writing` entry, a current title equal to `after` means mark `verified`. Continue only if it equals `before`, remains within the authorized scope, and `attempts < 2`; mark any other title as `conflict`. If the attempt limit has been reached or the outcome is still unclear, retain the unverified status. Do not reset the count when resuming. Do not automatically rewrite a `verified` entry whose current title has changed. A generic "continue" must not rename a restored batch again.
+5. Report counts from the records after read-back, separating verified entries, entries skipped without a write, conflicts or failures, entries still awaiting verification, and inventory completeness. Describe the requested scope as complete only if the inventory is complete and no unresolved entries remain. Pending verification does not count as success.
 
-## 恢复原名
+## Restore original titles
 
-仅在用户明确要求恢复本批或指定条目后执行。只处理本批曾尝试写入的 `writing`、`verified`、`restoring`、`restored` 条目；预览、`pending`、`skipped`、`failed` 或已冲突条目不自动纳入。
+Run only after the user explicitly requests restoration of this batch or specified entries. Process only entries where this batch previously attempted a write: `writing`, `verified`, `restoring`, or `restored`. Do not automatically include previews, `pending`, `skipped`, `failed`, or entries already marked as conflicting.
 
-- 已为 `restored` 的条目只核验：现名仍为 `before` 则保持完成；任何其他名称（包括再次变为 `after`）都记 `conflict`，不按旧批次再次写入，以免覆盖恢复完成后的外部改名。
-- 先核对任务身份、用户指定的恢复范围和现名；恢复范围限定了项目时，核对当前归属。现名已为 `before`，记 `restored`，无需写入；等于 `after` 才可恢复；两者都不是则记 `conflict`，保留外部改名。
-- **先将状态设为 `restoring`、递增恢复操作的 `attempts` 并落盘，再用官方工具写回 `before`。** 读回确认为 `before` 才记 `restored`；无法确认时保持 `restoring`，不交换 `before/after`，不清除原始记录。
-- 恢复中断后按同一流程先读后做：为 `before` 则完成，为 `after`、仍有授权且 `attempts < 2` 时才可重试，其他名称停止覆盖。恢复计数已达上限时只读核对，不再写入。
+- For an entry already marked `restored`, verify only: if the current title still equals `before`, keep it complete. Mark any other title, including a title changed back to `after`, as `conflict`. Do not write again based on the old batch, which could overwrite an external rename made after restoration completed.
+- Check task identity, the user's requested restoration scope, and the current title first. If restoration is limited to a project, check current membership. If the title already equals `before`, mark `restored` without writing. Restore only if it equals `after`; if it equals neither, mark `conflict` and preserve the external rename.
+- **Set the status to `restoring`, increment `attempts` for the restoration operation, and persist the record before using the official tool to write `before`.** Mark `restored` only when read-back confirms `before`. Otherwise, keep `restoring`; do not swap `before` and `after` or clear the original record.
+- After an interrupted restoration, follow the same read-before-action process: a title equal to `before` is complete. Retry only if it equals `after`, authorization still applies, and `attempts < 2`; stop overwriting any other title. Once the restoration attempt limit is reached, perform read-only checks and make no further writes.
 
-重复运行只处理仍需变化的任务，不添加去重序号，不因当前日期更新标题，不重新润色已准确的主题。
+Repeated runs process only tasks that still need changes. Do not add deduplication numbers, update titles to the current date, or polish topics that are already accurate.
 
-当前工具没有条件写入参数时，写前检查不构成原子锁；发现同一任务仍在被外部修改时跳过，不能承诺完全消除并发覆盖。
+When the available tools lack conditional writes, a pre-write check is not an atomic lock. Skip a task if external changes to it are ongoing; do not promise to eliminate all concurrent overwrites.

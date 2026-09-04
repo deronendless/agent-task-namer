@@ -58,4 +58,4 @@ $codex-task-namer 整理当前项目的所有任务命名。
 
 [完整规则](SKILL.md) · [批量改名与恢复](references/batch.md) · [验证方法](references/validation.md) · [MIT 许可证](LICENSE)
 
-社区 Skill，非 OpenAI 官方产品。
+完整规则与参考文档使用英文。社区 Skill，非 OpenAI 官方产品。

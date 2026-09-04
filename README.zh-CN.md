@@ -18,7 +18,7 @@
 | Claude Code 本地 CLI（需要可选 SDK） | 实验性支持 | 实验性支持 | 暂不支持 |
 | 其他能读取 Skill 的 Agent | 仅标题建议 | 暂不支持 | 暂不支持 |
 
-Claude Code 适配为实验性支持，完整流程仍待验证。[查看通用验收方法](references/validation.md)。
+Claude Code 适配为实验性支持，完整流程仍待验证。
 
 ## 1. 安装
 
@@ -52,17 +52,7 @@ $agent-task-namer 按规范重命名当前任务。
 
 缺少可靠创建时间时只生成类型和主题草稿，不猜日期。
 
-**Codex：先看项目预览**
-
-```text
-$agent-task-namer 预览当前项目各任务的新标题，先不要执行改名。
-```
-
-**Codex：整理整个项目**
-
-```text
-$agent-task-namer 整理当前项目的所有任务命名。
-```
+在 Codex 中整理项目任务时，可以让 `$agent-task-namer` “预览新标题，先不要执行改名”，或“整理当前项目的所有任务命名”。
 
 已经准确合规、或由你明确指定的标题会保留。想切换语言，直接说：“保留格式，把当前任务标题改成英文。”
 
@@ -78,6 +68,6 @@ $agent-task-namer 整理当前项目的所有任务命名。
 
 ---
 
-[完整规则](SKILL.md) · [批量改名与恢复](references/batch.md) · [验证方法](references/validation.md) · [MIT 许可证](LICENSE)
+[完整规则](SKILL.md) · [批量改名与恢复](references/batch.md) · [MIT 许可证](LICENSE)
 
 完整规则与参考文档使用英文。社区 Skill，非 OpenAI 或 Anthropic 官方产品。

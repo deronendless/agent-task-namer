@@ -44,6 +44,12 @@ class SessionStartTest(unittest.TestCase):
         event = {"hook_event_name": "SessionStart", "source": "startup",
                  "session_id": "abc123", "cwd": str(SCRIPT.parent),
                  "agent_type": "custom-main-agent"}
+        for args in ((), ("--client", "claude-code")):
+            context = json.loads(self.run_hook(json.dumps(event), *args).stdout)["hookSpecificOutput"]["additionalContext"]
+            for phrase in ("Root agent only", f"Read {SCRIPT.parent.parent / 'SKILL.md'}",
+                           "first substantive user request", "before the first final reply",
+                           "Respect preview-only requests"):
+                self.assertIn(phrase, context)
         for source in ("startup", "resume", "clear", "compact", "fork"):
             event["source"] = source
             result = self.run_hook(json.dumps(event), "--client", "claude-code")

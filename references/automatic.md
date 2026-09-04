@@ -32,6 +32,8 @@ The example below shows the configuration structure. During installation, replac
 
 Unmanaged hooks must be reviewed and trusted by the user through `/hooks` in the Codex CLI. New or changed hook definitions will not run until trusted. Do not edit trust records, use trust-bypass arguments, or claim that saving configuration means activation succeeded. If hooks are disabled in the current environment, explain that state first and follow the user's choice about enabling them.
 
+To disable automatic naming, disable this hook in `/hooks` or remove only its configuration entry. The skill remains available on demand. No scheduled tasks, background services, or direct changes to the Codex database are needed.
+
 ## Claude Code local CLI setup
 
 Install this skill directory at `~/.claude/skills/agent-task-namer/`. Preserve any existing files and compare them before updating; do not overwrite external changes. Use `agent-task-namer` for the repository and skill directory, and `/agent-task-namer` for Claude invocation.
@@ -72,11 +74,6 @@ To disable, remove only this script's Claude hook entry. Keep unrelated hooks, t
 
 ## Verification
 
-1. Run `python3 scripts/test_session_start.py` to verify event inputs, JSON output, and non-blocking behavior.
-2. After the user trusts the hook, verify in a Codex client with task tools that the first response in a new task names it, ordinary follow-up conversation does not repeatedly rename it, subagents do not rename the parent task, and resuming an old task does not trigger batch renaming.
-
-To disable automatic naming, disable this hook in `/hooks` or remove only the configuration entry for this script. The skill remains available on demand. No scheduled tasks, background services, or direct changes to the Codex database are needed.
-
-For Claude, run `python3 scripts/test_claude_session.py` with the mocked SDK, then use dedicated real sessions to verify loading, trusted identity, explicit naming, first-turn hook naming, continuation/resume/custom-title preservation, and persistence after reopening. Follow the [acceptance checks](validation.md), keeping environment details and run results in private records outside the repository; mark only observed capabilities as verified. Do not trial writes in daily sessions.
+Follow the [acceptance checks](validation.md) for script tests and activation checks in dedicated tasks or sessions. Keep environment details and run results outside the repository; mark only observed capabilities as verified.
 
 Official references: [Codex Skills](https://learn.chatgpt.com/docs/build-skills), [Codex Hooks](https://learn.chatgpt.com/docs/hooks), [Claude Skills](https://code.claude.com/docs/en/skills), [Claude Hooks](https://code.claude.com/docs/en/hooks).

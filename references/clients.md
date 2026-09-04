@@ -8,7 +8,7 @@ Read this before accessing or changing a client's task titles. Identify the actu
 | Claude Code with the optional SDK bridge | Current session only; explicit naming or a trusted new-session reminder | `scripts/claude_session.py` using the official Claude Agent SDK |
 | Other agents, or a client missing the required capabilities | Candidate titles only | No client writes |
 
-A skill that can be loaded is not necessarily able to rename a client's sessions. Use the main skill's candidate-only fallback when the needed capability or trusted identity is missing. Do not call a different client's operations to work around a missing capability.
+A skill that can be loaded is not necessarily able to rename a client's sessions. Use the [candidate-only fallback](../SKILL.md#candidate-only-fallback) when the needed capability or trusted identity is missing. Do not call a different client's operations to work around a missing capability.
 
 ## Codex
 
@@ -40,16 +40,7 @@ Use the actual installed script path, quoting it if needed. Missing dependencies
 
 ### Inspect and read context
 
-Start with `inspect`. The values below are placeholders, not usable session identity:
-
-```json
-{
-  "action": "inspect",
-  "session_id": "<trusted current session UUID>",
-  "directory": "/absolute/current/project",
-  "trusted_session_id": "<the same UUID from trusted runtime context>"
-}
-```
+Start with `action: "inspect"` and the `session_id`, `directory`, and `trusted_session_id` fields shown in the rename example below, omitting rename-only fields. Replace all placeholders with verified runtime values before calling the bridge.
 
 The result includes `status` and session metadata: `session_id`, `directory`, `summary` (the effective display title), `custom_title`, and nullable `created_at`. A non-null `custom_title` is the effective title; otherwise use the SDK summary. `created_at` is epoch milliseconds, not seconds; see the official [Python SDK session reference](https://code.claude.com/docs/en/agent-sdk/python). A null or invalid creation timestamp must not be replaced by a modification time or the current date. An exact title explicitly supplied by the user does not require a creation timestamp.
 
@@ -57,7 +48,7 @@ Use existing substantive conversation context first. If more is needed, use `act
 
 ### Rename and verify
 
-For `rename`, include the same identity fields plus:
+After inspection, use `rename` with the same verified identity fields and the inspected title. These example identity values are placeholders:
 
 ```json
 {
@@ -78,9 +69,3 @@ Use `mode: "explicit"` only for a current user request to rename this session. A
 If inspection fails, identity does not match, the title changes externally, or a bridge guard rejects the request, preserve the title and explain or provide a candidate as appropriate. If a write may have happened but verification is unclear, inspect again before considering at most one targeted retry under the main workflow. Do not bypass a guard by calling the SDK directly, editing session files, or switching to a different session. Pre-write comparison is not an atomic lock against concurrent title changes.
 
 For optional automatic triggering, follow the Claude Code instructions in [automatic.md](automatic.md). The hook only reminds the agent to apply the skill; it does not rename the session itself.
-
-## Other agents
-
-Use the common formatting and language rules to generate a candidate from the available task description and reliable creation time. State that the title has not been applied. If the creation time is unknown, preserve the existing title and optionally provide a clearly labeled date-free draft; do not invent a date. An exact user-provided title may be repeated verbatim.
-
-Do not assume that another agent exposes Codex tools, the Claude Code SDK session identity, or either client's hooks. Direct title writes and automatic renaming are outside this version's support for other agents.

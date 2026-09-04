@@ -26,32 +26,28 @@ def hook_output(event, client="codex"):
     if not skill.is_file():
         return None
     context = (
-        "Codex task naming reminder from the local agent-task-namer hook. "
-        "Root agent only; subagents must ignore this reminder. "
-        f"Current session_id: {session_id}; session source: {source}. "
-        f"Read {skill} and apply its current-task mode when applicable. "
-        "For a new task, name it once its actual topic is clear, before the first final reply. "
+        f"Codex current task: session_id: {session_id}; session source: {source}. "
         "Use available official task tools; skip if they are unavailable. "
-        "Session startup/resume/clear/compact does not establish task creation time. "
-        "Preserve existing correct or user-chosen titles; do not bulk-rename old tasks "
-        "unless the user requests it. Respect preview-only requests. "
-        "Do not interrupt the user's main task or repeatedly rename it."
+        "Do not bulk-rename old tasks unless the user requests it. "
     )
     if client == "claude-code":
         cwd = event.get("cwd")
         if not isinstance(cwd, str) or not Path(cwd).is_absolute() or any(ord(c) < 32 for c in cwd):
             return None
         context = (
-            "Claude Code current-session naming reminder from the local agent-task-namer hook. "
-            "Root agent only; subagents must ignore this reminder. "
+            "Claude Code current session. "
             f"Trusted session identity: {json.dumps({'session_id': session_id, 'directory': cwd, 'source': source})}. "
-            f"Read {skill} and its Claude Code client workflow. "
-            "Name only a new session after its first substantive user request is clear, before the first final reply. "
             "Use the official SDK bridge; if unavailable, offer a suggestion only. "
-            "Preserve existing custom titles. Resume, clear, compact, and fork do not authorize automatic renaming. "
-            "These events are not creation timestamps. Respect preview-only requests. "
-            "Do not rename other sessions or interrupt the main task."
+            "Preserve existing custom titles. Do not rename other sessions. "
         )
+    context += (
+        "Naming reminder from the local agent-task-namer hook. Root agent only; subagents must ignore this reminder. "
+        f"Read {skill} and follow its client workflow before naming; skip if it cannot be read. "
+        "Name only a new task after its first substantive user request is clear, before the first final reply. "
+        "Preserve existing correct or user-chosen titles. Respect preview-only requests. "
+        "Resume, clear, compact, and fork do not authorize automatic renaming by themselves. "
+        "Session events are not creation timestamps. Do not interrupt the user's main task or repeatedly rename it."
+    )
     return {"hookSpecificOutput": {"hookEventName": "SessionStart", "additionalContext": context}}
 
 

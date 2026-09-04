@@ -18,7 +18,7 @@ Each title follows the language of that task's main request. Dates stay tied to 
 | Claude Code local CLI (optional SDK required) | Experimental | Experimental | Not included |
 | Other agents that can read skills | Suggestions only | Not included | Not included |
 
-Claude Code support is experimental; end-to-end validation is still pending. See the reusable [acceptance checks](references/validation.md).
+Claude Code support is experimental; end-to-end validation is still pending.
 
 ## 1. Install
 
@@ -52,17 +52,7 @@ Read agent-task-namer/SKILL.md and suggest a title based on this task’s main r
 
 Without a reliable creation time, you get a type and topic draft instead of a guessed date.
 
-**Codex: preview project titles**
-
-```text
-$agent-task-namer Preview new titles for the tasks in this project. Do not rename them yet.
-```
-
-**Codex: organize a project's tasks**
-
-```text
-$agent-task-namer Organize the titles of all tasks in this project.
-```
+For Codex project tasks, ask `$agent-task-namer` to “Preview new titles without applying them” or “Organize the titles of all tasks in this project.”
 
 Accurate, compliant titles and titles you explicitly chose are preserved. To change the language, just ask: “Translate this task's title into English, keeping the format.”
 
@@ -78,6 +68,6 @@ This requires separate setup and client support; installation alone does not ena
 
 ---
 
-[Detailed rules](SKILL.md) · [Batch rename and restore](references/batch.md) · [Validation](references/validation.md) · [MIT License](LICENSE)
+[Detailed rules](SKILL.md) · [Batch rename and restore](references/batch.md) · [MIT License](LICENSE)
 
 Community skill; not an official OpenAI or Anthropic product.

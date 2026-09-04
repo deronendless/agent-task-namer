@@ -15,10 +15,10 @@ Each title follows the language of that task's main request. Dates stay tied to 
 | Client | Rename current task | Optional automatic naming | Batch and restore |
 |---|---|---|---|
 | Codex (official task tools required) | Supported | Supported | Supported |
-| Claude Code local CLI (optional SDK required) | Local title read/write verified | Pending end-to-end verification | Not included |
+| Claude Code local CLI (optional SDK required) | Experimental | Experimental | Not included |
 | Other agents that can read skills | Suggestions only | Not included | Not included |
 
-See [validation](references/validation.md) for tested environments and verification status.
+Claude Code support is experimental; end-to-end validation is still pending. See the reusable [acceptance checks](references/validation.md).
 
 ## 1. Install
 

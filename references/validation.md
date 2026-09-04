@@ -1,18 +1,18 @@
 # Naming behavior acceptance checks
 
-Use these checks before maintenance or release; do not load them during routine naming. `scripts/test_session_start.py` only checks the Hook protocol and non-blocking behavior. It does not replace the naming decision checks below.
+Use these reusable checks before maintenance or release; do not load them during routine naming. `scripts/test_session_start.py` only checks the Hook protocol and non-blocking behavior. It does not replace the naming decision checks below.
 
 ## Method
 
-In an isolated, offline evaluation, give an independent agent the current Skill, test request, and inputs below, without the expected results. Replace official tools with input snapshots; do not read or rename any real tasks. Ask the agent to return its candidate title, whether it would invoke a write, and any required next steps or record status. Then compare its response with the expectations. Every `case-*` below is a fictional ID and must never be passed to real tools.
+In an isolated, offline evaluation, give an independent agent the current Skill, test request, and inputs below, without the expected results. Replace official tools with input snapshots; do not read or rename any real tasks. Ask the agent to return its candidate title, whether it would invoke a write, and any required next steps or record status. Then compare its response with the expectations. Every `case-*` below is a fictional ID and must never be passed to real tools. Keep personal test logs, machine details, account status, and troubleshooting records outside the repository; publish only generic guidance and non-personal support status.
 
 ## Input cases
 
 Unless stated otherwise: task ownership and identity are confirmed, official renaming is available, the user's substantive request is in Chinese, the time zone is Shanghai, and the user has not set a custom title. When a new title is required, use the explicitly supplied type and topic. All ISO timestamps are test values for the actual `createdAt` field.
 
 1. **Shanghai date rollover and year boundary**: New task `case-year`, triggered by a trusted `startup` Hook, with no prior history confirmed. Created at `2026-12-31T16:30:00Z`, with type “修复” and topic “登录回调失败”. The first user goal is clear, and the task has not yet been named.
-2. **Resuming across years and idempotency**: Task `case-stable` was created at `2026-09-04T00:00:00Z` and is currently named `🔍 探索 | 260904 | Herdr远程连接`. When resumed in 2027, the conversation still concerns the same topic, and the Hook reminder comes from `resume`. The task is then organized again using the same convention.
-3. **Preserve the emoji when reformatting**: Task `case-format` was created at `2026-09-04T00:00:00Z` and is currently named `0904｜🔍 探索｜Herdr远程连接`. The user requests “改为类型 | 六位日期 | 主题” without asking to remove the emoji.
+2. **Resuming across years and idempotency**: Task `case-stable` was created at `2026-09-04T00:00:00Z` and is currently named `🔍 探索 | 260904 | 远程连接配置`. When resumed in 2027, the conversation still concerns the same topic, and the Hook reminder comes from `resume`. The task is then organized again using the same convention.
+3. **Preserve the emoji when reformatting**: Task `case-format` was created at `2026-09-04T00:00:00Z` and is currently named `0904｜🔍 探索｜远程连接配置`. The user requests “改为类型 | 六位日期 | 主题” without asking to remove the emoji.
 4. **An exact custom title takes priority**: The current user explicitly asks to rename `case-exact` to `我的发布清单`. Identity is confirmed, but `createdAt` is unavailable.
 5. **Official ownership takes priority**: The user asks to organize project A. The current official `projectId` for `case-outside` is explicitly `null`, while old local assignments and sidebar records both point to A. `case-sidebar` is absent from the official list and has no explicit assignment, but its sidebar association clearly points to A. Metadata and an official read confirm that it is an unarchived main task, with no conflicting evidence. For `case-path`, only the working directory matches A; no other ownership evidence exists.
 6. **Closing exchanges do not replace the main task**: The user asks to organize `case-topic`, created at `2026-09-04T00:00:00Z`. The latest two turns contain only “提交代码” and “push”, with completion replies. An earlier page, supplied on request, clearly records “修复登录回调失败” and completion of that fix, with no new substantive goal.
@@ -34,7 +34,7 @@ Unless stated otherwise: task ownership and identity are confirmed, official ren
 |---|---|
 | 1 | Candidate: `🐛 修复 | 270101 | 登录回调失败`. Do not use the UTC date or the execution date. |
 | 2 | Keep the current title both times, do not call the rename tool, and do not change the date to 2027. |
-| 3 | Candidate: `🔍 探索 | 260904 | Herdr远程连接`, preserving the emoji. |
+| 3 | Candidate: `🔍 探索 | 260904 | 远程连接配置`, preserving the emoji. |
 | 4 | Use `我的发布清单` verbatim, without adding a date, type, or emoji. An official write and readback are still required. |
 | 5 | Exclude `case-outside`; include `case-sidebar` and read its topic according to the rules. Leave ownership of `case-path` unknown, and do not claim to have processed every task. |
 | 6 | Request the necessary earlier page before forming `🐛 修复 | 260904 | 登录回调失败`. Do not classify the task as a release based only on “提交/push”. |
@@ -69,24 +69,4 @@ Also evaluate these raw cases without showing the expected column to the evaluat
 
 The bridge tests cover missing/incompatible SDK, invalid or mismatched IDs and directories, nullable/millisecond creation times, automatic-mode guards, external title changes, write errors, mismatched or failed readback, and Unicode/quotes/pipes transported as JSON. Each bridge invocation can attempt at most one write. Test the default Codex hook and explicit Claude hook, including unknown clients, malformed inputs, and subagent identities.
 
-For live verification, create a dedicated project and sessions through Claude Code normally. Confirm workspace trust before testing; use a session-scoped hook before merging a global hook. Check explicit Chinese and English naming, first-turn automatic naming, continuation, resume, preservation of a manual custom title, and readback after reopening. Keep session IDs, logs, and test files outside this repository. Record versions and actual results below, including any blocked checks. A documented implementation or passing mock test is not a claim that a live client was verified.
-
-
-## Recorded verification — 2026-09-04
-
-Environment: macOS 26.5 arm64; bridge Python 3.13.5; official `claude-agent-sdk==0.2.152`. Existing default CLI: 2.0.27. SDK-bundled CLI used for the current-format session test: 2.1.259. This is a tested combination, not a minimum-version claim or a default CLI upgrade.
-
-| Check | Result |
-|---|---|
-| Official Skill validator, UI metadata, local links, JSON examples, Git whitespace | Passed |
-| Original 17 Codex behavioral groups, independently evaluated without the answer key | Passed, including retry and restoration branches |
-| Cross-client suggestion, language, identity and scope cases | Passed in isolated evaluation; writing remains conditional on complete trusted identity and first-turn evidence |
-| Standard-library script tests | 17 tests passed; no live user tasks used |
-| CLI skill discovery and session-scoped startup hook | Observed in 2.0.27 and 2.1.259; hook identity matched the dedicated session |
-| Real local session metadata and filtered history through the SDK | Passed |
-| Chinese/English title writes and readback through the bridge harness | Passed on a dedicated CLI-created session |
-| Title persistence across fresh bridge processes; custom-title preservation; stale-title conflicts; resume/fork guards | Passed through the bridge harness |
-| Model-driven slash invocation, first-turn automatic naming, conversational continuation, and reopened CLI behavior | Not verified: old CLI requests timed out; the SDK-bundled CLI reported expired OAuth that could not be refreshed |
-| Global Claude naming hook | Not enabled; pending successful end-to-end checks |
-
-The default CLI upgrade was blocked by filesystem permissions; an alternate npm installation had an existing temporary-directory conflict and was not executable. No permission bypass, system-directory repair, trust-record editing, or CLI downgrade was performed. The SDK-bundled CLI was invoked by its explicit path only. Reauthenticate Claude Code through its normal login flow, rerun the pending dedicated-session checks, and only then merge the global hook. Local session IDs, outputs, paths, and configuration backups are excluded from this repository. No daily sessions were renamed and no test sessions were deleted.
+For live verification, create a dedicated project and sessions through Claude Code normally. Confirm workspace trust before testing; use a session-scoped hook before merging a global hook. Check explicit Chinese and English naming, first-turn automatic naming, continuation, resume, preservation of a manual custom title, and readback after reopening. Keep session IDs, logs, test files, environment details, and run results in private records outside this repository. A documented implementation or passing mock test is not a claim that a live client was verified.

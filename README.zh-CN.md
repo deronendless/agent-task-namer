@@ -15,10 +15,10 @@
 | 客户端 | 当前任务改名 | 可选自动命名 | 批量整理与恢复 |
 |---|---|---|---|
 | Codex（需要官方任务工具） | 支持 | 支持 | 支持 |
-| Claude Code 本地 CLI（需要可选 SDK） | 本地标题读写已实测 | 完整流程待验证 | 暂不支持 |
+| Claude Code 本地 CLI（需要可选 SDK） | 实验性支持 | 实验性支持 | 暂不支持 |
 | 其他能读取 Skill 的 Agent | 仅标题建议 | 暂不支持 | 暂不支持 |
 
-实测环境与验证状态见[验证记录](references/validation.md)。
+Claude Code 适配为实验性支持，完整流程仍待验证。[查看通用验收方法](references/validation.md)。
 
 ## 1. 安装
 

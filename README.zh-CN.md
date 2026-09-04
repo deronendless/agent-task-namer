@@ -25,29 +25,29 @@
 把这句话发给你使用的 Agent：
 
 ```text
-请从 https://github.com/deronendless/codex-task-namer 安装 codex-task-namer 这个 Skill。
+请从 https://github.com/deronendless/agent-task-namer 安装 agent-task-namer 这个 Skill。
 ```
 
-Claude Code 安装到 `~/.claude/skills/codex-task-namer/`，实际改名还需[安装可选 SDK](references/automatic.md#claude-code-local-cli-setup)。其他 Agent 按其 Skill 安装方式加载，或直接读取本仓库的 `SKILL.md`。仓库名和 Skill 标识继续使用 `codex-task-namer`。
+Claude Code 安装到 `~/.claude/skills/agent-task-namer/`，实际改名还需[安装可选 SDK](references/automatic.md#claude-code-local-cli-setup)。其他 Agent 按其 Skill 安装方式加载，或直接读取本仓库的 `SKILL.md`。仓库名、Skill 目录名和调用标识统一为 `agent-task-namer`。
 
 ## 2. 使用
 
 **Codex：给当前任务改名**
 
 ```text
-$codex-task-namer 按规范重命名当前任务。
+$agent-task-namer 按规范重命名当前任务。
 ```
 
 **Claude Code：给当前会话改名**
 
 ```text
-/codex-task-namer 按规范重命名当前会话。
+/agent-task-namer 按规范重命名当前会话。
 ```
 
 **其他 Agent：生成建议**
 
 ```text
-读取 codex-task-namer/SKILL.md，按本任务的主要请求生成标题建议。
+读取 agent-task-namer/SKILL.md，按本任务的主要请求生成标题建议。
 ```
 
 缺少可靠创建时间时只生成类型和主题草稿，不猜日期。
@@ -55,13 +55,13 @@ $codex-task-namer 按规范重命名当前任务。
 **Codex：先看项目预览**
 
 ```text
-$codex-task-namer 预览当前项目各任务的新标题，先不要执行改名。
+$agent-task-namer 预览当前项目各任务的新标题，先不要执行改名。
 ```
 
 **Codex：整理整个项目**
 
 ```text
-$codex-task-namer 整理当前项目的所有任务命名。
+$agent-task-namer 整理当前项目的所有任务命名。
 ```
 
 已经准确合规、或由你明确指定的标题会保留。想切换语言，直接说：“保留格式，把当前任务标题改成英文。”
@@ -71,7 +71,7 @@ $codex-task-namer 整理当前项目的所有任务命名。
 把这句话发给 Codex 或 Claude Code：
 
 ```text
-帮我启用 codex-task-namer 的新任务自动命名。
+帮我启用 agent-task-namer 的新任务自动命名。
 ```
 
 自动命名需要单独配置和客户端支持，不会随安装自动启用。按对应客户端的提示审阅配置并完成信任流程。[查看配置详情](references/automatic.md)。

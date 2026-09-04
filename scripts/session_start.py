@@ -26,7 +26,7 @@ def hook_output(event, client="codex"):
     if not skill.is_file():
         return None
     context = (
-        "Codex task naming reminder from the local codex-task-namer hook. "
+        "Codex task naming reminder from the local agent-task-namer hook. "
         "Root agent only; subagents must ignore this reminder. "
         f"Current session_id: {session_id}; session source: {source}. "
         f"Read {skill} and apply its current-task mode when applicable. "
@@ -42,7 +42,7 @@ def hook_output(event, client="codex"):
         if not isinstance(cwd, str) or not Path(cwd).is_absolute() or any(ord(c) < 32 for c in cwd):
             return None
         context = (
-            "Claude Code current-session naming reminder from the local codex-task-namer hook. "
+            "Claude Code current-session naming reminder from the local agent-task-namer hook. "
             "Root agent only; subagents must ignore this reminder. "
             f"Trusted session identity: {json.dumps({'session_id': session_id, 'directory': cwd, 'source': source})}. "
             f"Read {skill} and its Claude Code client workflow. "

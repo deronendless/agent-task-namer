@@ -25,29 +25,29 @@ See [validation](references/validation.md) for tested environments and verificat
 Send this to your agent:
 
 ```text
-Install the codex-task-namer skill from https://github.com/deronendless/codex-task-namer
+Install the agent-task-namer skill from https://github.com/deronendless/agent-task-namer
 ```
 
-For Claude Code, install at `~/.claude/skills/codex-task-namer/` and [set up the optional SDK](references/automatic.md#claude-code-local-cli-setup) to rename sessions. Other agents can use their skill loader or read this repository’s `SKILL.md`. The repository and skill identifier remain `codex-task-namer`.
+For Claude Code, install at `~/.claude/skills/agent-task-namer/` and [set up the optional SDK](references/automatic.md#claude-code-local-cli-setup) to rename sessions. Other agents can use their skill loader or read this repository’s `SKILL.md`. The repository, skill directory, and invocation identifier are `agent-task-namer`.
 
 ## 2. Use
 
 **Codex: rename the current task**
 
 ```text
-$codex-task-namer Rename this task using the standard format.
+$agent-task-namer Rename this task using the standard format.
 ```
 
 **Claude Code: rename the current session**
 
 ```text
-/codex-task-namer Rename this session using the standard format.
+/agent-task-namer Rename this session using the standard format.
 ```
 
 **Other agents: suggest a title**
 
 ```text
-Read codex-task-namer/SKILL.md and suggest a title based on this task’s main request.
+Read agent-task-namer/SKILL.md and suggest a title based on this task’s main request.
 ```
 
 Without a reliable creation time, you get a type and topic draft instead of a guessed date.
@@ -55,13 +55,13 @@ Without a reliable creation time, you get a type and topic draft instead of a gu
 **Codex: preview project titles**
 
 ```text
-$codex-task-namer Preview new titles for the tasks in this project. Do not rename them yet.
+$agent-task-namer Preview new titles for the tasks in this project. Do not rename them yet.
 ```
 
 **Codex: organize a project's tasks**
 
 ```text
-$codex-task-namer Organize the titles of all tasks in this project.
+$agent-task-namer Organize the titles of all tasks in this project.
 ```
 
 Accurate, compliant titles and titles you explicitly chose are preserved. To change the language, just ask: “Translate this task's title into English, keeping the format.”
@@ -71,7 +71,7 @@ Accurate, compliant titles and titles you explicitly chose are preserved. To cha
 Send this to Codex or Claude Code:
 
 ```text
-Enable automatic naming for new tasks with codex-task-namer.
+Enable automatic naming for new tasks with agent-task-namer.
 ```
 
 This requires separate setup and client support; installation alone does not enable it. Follow your client's normal configuration review and trust flow. See [setup details](references/automatic.md).

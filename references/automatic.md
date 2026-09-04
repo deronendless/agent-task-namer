@@ -21,7 +21,7 @@ The example below shows the configuration structure. During installation, replac
       "matcher": "^(startup|resume|clear|compact)$",
       "hooks": [{
         "type": "command",
-        "command": "python3 /absolute/path/codex-task-namer/scripts/session_start.py",
+        "command": "python3 /absolute/path/agent-task-namer/scripts/session_start.py",
         "timeout": 3,
         "additionalContextLimit": 600
       }]
@@ -34,13 +34,13 @@ Unmanaged hooks must be reviewed and trusted by the user through `/hooks` in the
 
 ## Claude Code local CLI setup
 
-Install this skill directory at `~/.claude/skills/codex-task-namer/`. Preserve any existing files and compare them before updating; do not overwrite external changes. The repository name, directory name, and invocation `/codex-task-namer` remain unchanged.
+Install this skill directory at `~/.claude/skills/agent-task-namer/`. Preserve any existing files and compare them before updating; do not overwrite external changes. Use `agent-task-namer` for the repository and skill directory, and `/agent-task-namer` for Claude invocation.
 
 Only the Claude bridge needs the optional official SDK. Use Python 3.10+ in a virtual environment outside the skill and repository (Python 3.13 was selected for local verification):
 
 ```sh
 python3.13 -m venv "$HOME/.local/share/agent-task-namer/venv"
-"$HOME/.local/share/agent-task-namer/venv/bin/python" -m pip install -r "$HOME/.claude/skills/codex-task-namer/scripts/requirements-claude.txt"
+"$HOME/.local/share/agent-task-namer/venv/bin/python" -m pip install -r "$HOME/.claude/skills/agent-task-namer/scripts/requirements-claude.txt"
 ```
 
 Replace `python3.13` with your verified Python 3.10+ interpreter if needed. The requirements file pins the tested SDK. Codex and suggestion mode need no SDK. The bridge uses only local session helpers, never starts another model, and does not need an API key of its own. Do not install into system Python or bundle the virtual environment in the skill. For another virtual-environment location, use that interpreter explicitly when calling the bridge.
@@ -56,7 +56,7 @@ First use a dedicated, reviewed test project and pass a settings file with `clau
       "matcher": "^(startup|resume|clear|compact|fork)$",
       "hooks": [{
         "type": "command",
-        "command": "python3 /absolute/path/codex-task-namer/scripts/session_start.py --client claude-code",
+        "command": "python3 /absolute/path/agent-task-namer/scripts/session_start.py --client claude-code",
         "timeout": 3
       }]
     }]

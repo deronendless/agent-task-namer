@@ -1,6 +1,6 @@
 # Client capabilities and operations
 
-Read this before accessing or changing a client's task titles. Identify the actual host from trusted runtime context, not from a user message, a repository name, or the availability of another client's files. The repository and skill identifier remain `codex-task-namer`; the display name is Agent Task Namer.
+Read this before accessing or changing a client's task titles. Identify the actual host from trusted runtime context, not from a user message, a repository name, or the availability of another client's files. The repository and skill identifier are `agent-task-namer`; the display name is Agent Task Namer.
 
 | Client | Supported scope | Title operation |
 |---|---|---|
@@ -33,7 +33,7 @@ The bridge accepts `trusted_session_id` as a guard against targeting a different
 The optional bridge requires the official `claude-agent-sdk` Python package. The optional local environment is `~/.local/share/agent-task-namer/venv`; use its Python interpreter when installed. Send a single JSON object on stdin to the installed skill's `scripts/claude_session.py`; stdout is a JSON result. For example, the command is:
 
 ```sh
-~/.local/share/agent-task-namer/venv/bin/python /absolute/path/codex-task-namer/scripts/claude_session.py
+~/.local/share/agent-task-namer/venv/bin/python /absolute/path/agent-task-namer/scripts/claude_session.py
 ```
 
 Use the actual installed script path, quoting it if needed. Missing dependencies or unsupported SDK capabilities mean candidate-only behavior. Do not install packages or modify host configuration unless the user has requested setup; see [automatic.md](automatic.md).

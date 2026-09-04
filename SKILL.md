@@ -1,5 +1,5 @@
 ---
-name: codex-task-namer
+name: agent-task-namer
 description: "Name Codex tasks and the current Claude Code session as emoji Type | YYMMDD | Topic in the user's language; suggest titles for other agents. Use for naming, trusted local naming reminders, or explicitly requested Codex batches and recorded restoration; discussion and preview alone do not rename tasks."
 ---
 

@@ -55,9 +55,9 @@ Reasonable differences in topic wording are allowed, but do not relax dates, emo
 
 ## Cross-client checks
 
-Run `python3 scripts/test_session_start.py` and `python3 scripts/test_claude_session.py`. Tests use the standard library and mocked SDK objects, never daily sessions. The original 17 groups above run as simulated Codex cases with official task tools available.
+From the skill directory (the repository's `skills/agent-task-namer/`, or an installed standalone copy), run `python3 scripts/test_session_start.py` and `python3 scripts/test_claude_session.py`. Tests use the standard library and mocked SDK objects, never daily sessions. The original 17 groups above run as simulated Codex cases with official task tools available.
 
-For the native Codex plugin, also run `python3 scripts/test_plugin.py`. It checks skill-entry references and executes the bundled hook from a relocated package with a different working directory. It does not install or trust a real plugin, or replace live activation checks.
+From the repository root, also run `python3 hooks/test_plugin.py`. It checks that the discovered skill's references remain within its directory, executes the bundled hook from a relocated package with a different working directory, and verifies a standalone skill copied without the plugin files. It does not install or trust a real plugin, or replace live activation checks.
 
 Also evaluate these raw cases without showing the expected column to the evaluator:
 

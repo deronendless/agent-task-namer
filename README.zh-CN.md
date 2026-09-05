@@ -31,10 +31,10 @@ Codex 自动命名还提供插件形式，包含 Skill 和启动 Hook。本仓�
 原独立 Skill 安装方式继续支持。把这句话发给你使用的 Agent：
 
 ```text
-请从 https://github.com/deronendless/agent-task-namer 安装 agent-task-namer 这个 Skill。
+请从 https://github.com/deronendless/agent-task-namer/tree/main/skills/agent-task-namer 安装 agent-task-namer 这个 Skill。
 ```
 
-Claude Code 安装到 `~/.claude/skills/agent-task-namer/`，实际改名还需[安装可选 SDK](references/automatic.md#claude-code-local-cli-setup)。其他 Agent 按其 Skill 安装方式加载，或直接读取本仓库的 `SKILL.md`。仓库名、Skill 目录名和调用标识统一为 `agent-task-namer`。
+Claude Code 将仓库中的 `skills/agent-task-namer/` 目录复制到 `~/.claude/skills/agent-task-namer/`，实际改名还需[安装可选 SDK](skills/agent-task-namer/references/automatic.md#claude-code-local-cli-setup)。其他 Agent 按其 Skill 安装方式加载，或直接读取 [skills/agent-task-namer/SKILL.md](skills/agent-task-namer/SKILL.md)。仓库名、Skill 目录名和调用标识统一为 `agent-task-namer`。
 
 ## 2. 使用
 
@@ -53,7 +53,7 @@ $agent-task-namer 按规范重命名当前任务。
 **其他 Agent：生成建议**
 
 ```text
-读取 agent-task-namer/SKILL.md，按本任务的主要请求生成标题建议。
+读取仓库中的 skills/agent-task-namer/SKILL.md，按本任务的主要请求生成标题建议。
 ```
 
 缺少可靠创建时间时只生成类型和主题草稿，不猜日期。
@@ -72,10 +72,19 @@ $agent-task-namer 按规范重命名当前任务。
 帮我启用 agent-task-namer 的新任务自动命名。
 ```
 
-独立 Skill 仍需单独配置 Hook，并完成客户端的信任流程。迁移到 Codex 插件时，移除原有命名 Hook，避免重复提醒。[查看配置与迁移详情](references/automatic.md)。
+独立 Skill 仍需单独配置 Hook，并完成客户端的信任流程。迁移到 Codex 插件时，移除原有命名 Hook，避免重复提醒。[查看配置与迁移详情](skills/agent-task-namer/references/automatic.md)。
+
+## 目录结构
+
+```text
+.codex-plugin/           插件清单
+hooks/                  Codex 插件启动 Hook 配置
+skills/agent-task-namer/ 独立 Skill、脚本与参考文档
+assets/readme/          README 配图与图片源文件
+```
 
 ---
 
-[完整规则](SKILL.md) · [批量改名与恢复](references/batch.md) · [MIT 许可证](LICENSE)
+[完整规则](skills/agent-task-namer/SKILL.md) · [批量改名与恢复](skills/agent-task-namer/references/batch.md) · [MIT 许可证](LICENSE)
 
 完整规则与参考文档使用英文。社区 Skill，非 OpenAI 或 Anthropic 官方产品。

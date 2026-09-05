@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"${PLUGIN_ROOT}/scripts/session_start.py\"",
+            "command": "python3 \"${PLUGIN_ROOT}/skills/agent-task-namer/scripts/session_start.py\"",
             "timeout": 3,
             "additionalContextLimit": 600
           }

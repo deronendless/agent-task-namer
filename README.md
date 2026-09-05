@@ -31,10 +31,10 @@ For Codex automatic naming, this repository also provides a plugin containing th
 The standalone Skill remains supported. Send this to your agent:
 
 ```text
-Install the agent-task-namer skill from https://github.com/deronendless/agent-task-namer
+Install the agent-task-namer skill from https://github.com/deronendless/agent-task-namer/tree/main/skills/agent-task-namer
 ```
 
-For Claude Code, install at `~/.claude/skills/agent-task-namer/` and [set up the optional SDK](references/automatic.md#claude-code-local-cli-setup) to rename sessions. Other agents can use their skill loader or read this repository’s `SKILL.md`. The repository, skill directory, and invocation identifier are `agent-task-namer`.
+For Claude Code, copy the repository's `skills/agent-task-namer/` directory to `~/.claude/skills/agent-task-namer/` and [set up the optional SDK](skills/agent-task-namer/references/automatic.md#claude-code-local-cli-setup) to rename sessions. Other agents can use their skill loader or read [skills/agent-task-namer/SKILL.md](skills/agent-task-namer/SKILL.md). The repository, skill directory, and invocation identifier are `agent-task-namer`.
 
 ## 2. Use
 
@@ -53,7 +53,7 @@ $agent-task-namer Rename this task using the standard format.
 **Other agents: suggest a title**
 
 ```text
-Read agent-task-namer/SKILL.md and suggest a title based on this task’s main request.
+Read skills/agent-task-namer/SKILL.md in the repository and suggest a title based on this task’s main request.
 ```
 
 Without a reliable creation time, you get a type and topic draft instead of a guessed date.
@@ -72,10 +72,19 @@ Accurate, compliant titles and titles you explicitly chose are preserved. To cha
 Enable automatic naming for new tasks with agent-task-namer.
 ```
 
-The standalone Skill requires separate hook setup and the client's normal trust flow. When switching to the Codex plugin, remove the old naming hook to avoid duplicate reminders. See [setup and migration details](references/automatic.md).
+The standalone Skill requires separate hook setup and the client's normal trust flow. When switching to the Codex plugin, remove the old naming hook to avoid duplicate reminders. See [setup and migration details](skills/agent-task-namer/references/automatic.md).
+
+## Repository layout
+
+```text
+.codex-plugin/           Plugin manifest
+hooks/                  Codex plugin startup hook configuration
+skills/agent-task-namer/ Standalone Skill, scripts, and reference documents
+assets/readme/          README illustrations and source artwork
+```
 
 ---
 
-[Detailed rules](SKILL.md) · [Batch rename and restore](references/batch.md) · [MIT License](LICENSE)
+[Detailed rules](skills/agent-task-namer/SKILL.md) · [Batch rename and restore](skills/agent-task-namer/references/batch.md) · [MIT License](LICENSE)
 
 Community skill; not an official OpenAI or Anthropic product.

@@ -22,6 +22,10 @@ To disable automatic naming while retaining on-demand naming, disable this plugi
 
 ## Codex standalone Skill configuration
 
+Install the repository's `skills/agent-task-namer/` directory as the standalone skill. It contains `SKILL.md`, `agents/`, `references/`, and `scripts/`; it needs no files from the plugin root. The installed directory remains `~/.codex/skills/agent-task-namer/` (or the skill directory selected by the user's installer).
+
+Existing standalone installations copied from the former repository-root layout keep the same installed `SKILL.md` and `scripts/session_start.py` paths, so their hook commands need no change. For new installs or updates, copy the contents of `skills/agent-task-namer/`, not the whole repository. If a skill symlink or hook command points directly into a Git checkout, update that path to the checkout's `skills/agent-task-namer/` directory; changed hook commands require the normal trust review. Preserve local customizations when updating.
+
 The hook can be configured in `$CODEX_HOME/hooks.json` (usually `~/.codex/hooks.json`) or the corresponding `config.toml`. Inspect existing definitions before adding it, preserve other hooks, and avoid registering this script more than once. Hooks from multiple sources are merged for execution; do not install by overwriting the entire configuration file.
 
 The example below shows the configuration structure. During installation, replace the path with the actual absolute path on the user's machine, use a verified Python 3 interpreter, and quote paths containing spaces correctly:
@@ -48,7 +52,7 @@ To disable automatic naming, disable this hook in the app's Hooks settings or CL
 
 ## Claude Code local CLI setup
 
-Install this skill directory at `~/.claude/skills/agent-task-namer/`. Preserve any existing files and compare them before updating; do not overwrite external changes. Use `agent-task-namer` for the repository and skill directory, and `/agent-task-namer` for Claude invocation.
+Install the repository's `skills/agent-task-namer/` directory at `~/.claude/skills/agent-task-namer/`. The installed directory contains `SKILL.md` and `scripts/` directly, without an extra nested `skills/` directory. Existing standalone copies retain their script paths; symlinks into the old repository root must point to the new skill directory. Preserve any existing files and compare them before updating; do not overwrite external changes. Use `agent-task-namer` for the repository and skill directory, and `/agent-task-namer` for Claude invocation.
 
 Only the Claude bridge needs the optional official SDK. Use a Python 3.10+ interpreter to create a virtual environment outside the skill and repository:
 

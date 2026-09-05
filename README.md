@@ -74,15 +74,6 @@ Enable automatic naming for new tasks with agent-task-namer.
 
 The standalone Skill requires separate hook setup and the client's normal trust flow. When switching to the Codex plugin, remove the old naming hook to avoid duplicate reminders. See [setup and migration details](skills/agent-task-namer/references/automatic.md).
 
-## Repository layout
-
-```text
-.codex-plugin/           Plugin manifest
-hooks/                  Codex plugin startup hook configuration
-skills/agent-task-namer/ Standalone Skill, scripts, and reference documents
-assets/readme/          README illustrations and source artwork
-```
-
 ---
 
 [Detailed rules](skills/agent-task-namer/SKILL.md) · [Batch rename and restore](skills/agent-task-namer/references/batch.md) · [MIT License](LICENSE)

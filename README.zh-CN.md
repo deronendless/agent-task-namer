@@ -74,15 +74,6 @@ $agent-task-namer 按规范重命名当前任务。
 
 独立 Skill 仍需单独配置 Hook，并完成客户端的信任流程。迁移到 Codex 插件时，移除原有命名 Hook，避免重复提醒。[查看配置与迁移详情](skills/agent-task-namer/references/automatic.md)。
 
-## 目录结构
-
-```text
-.codex-plugin/           插件清单
-hooks/                  Codex 插件启动 Hook 配置
-skills/agent-task-namer/ 独立 Skill、脚本与参考文档
-assets/readme/          README 配图与图片源文件
-```
-
 ---
 
 [完整规则](skills/agent-task-namer/SKILL.md) · [批量改名与恢复](skills/agent-task-namer/references/batch.md) · [MIT 许可证](LICENSE)

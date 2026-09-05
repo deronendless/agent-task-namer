@@ -234,6 +234,22 @@ class ClaudeSessionTest(unittest.TestCase):
         self.assertEqual(result["reason"], "history_failed")
         self.assertNotIn("secret", json.dumps(result))
 
+    def test_history_skips_invalid_content_without_losing_valid_messages(self):
+        for invalid in (None, True, 42, {"type": "text", "text": "malformed content"}):
+            with self.subTest(content=invalid):
+                self.sdk.get_session_messages.return_value = [
+                    self.message("assistant", invalid),
+                    self.message("user", "Actual task goal"),
+                    self.message("assistant", "Next page"),
+                ]
+                result = self.run_request(action="history", offset=5, limit=2)
+                self.assertEqual(result["status"], "ok")
+                self.assertEqual(result["messages"], [
+                    {"role": "user", "text": "Actual task goal", "truncated": False},
+                ])
+                self.assertEqual(result["next_offset"], 7)
+        self.sdk.rename_session.assert_not_called()
+
     def test_json_input_and_unicode_output(self):
         title = "📝 文档 | 'single' \"double\" | $(literal) `literal`"
         request = {**self.request, "action": "rename", "mode": "explicit", "expected_title": self.info.summary, "title": title}
@@ -247,6 +263,16 @@ class ClaudeSessionTest(unittest.TestCase):
             with patch.object(bridge.sys, "stdin", io.StringIO(raw)), patch.object(bridge.sys, "stdout", output):
                 bridge.main()
             self.assertEqual(json.loads(output.getvalue())["status"], "invalid_request")
+
+    def test_deeply_nested_json_returns_invalid_request_without_loading_sdk(self):
+        raw = "[" * 1100 + "0" + "]" * 1100
+        output = io.StringIO()
+        with patch.object(bridge.sys, "stdin", io.StringIO(raw)), patch.object(bridge.sys, "stdout", output), patch.object(bridge, "import_module") as load_sdk:
+            bridge.main()
+        self.assertEqual(json.loads(output.getvalue()), {
+            "status": "invalid_request", "write_attempted": False, "write_succeeded": False,
+        })
+        load_sdk.assert_not_called()
 
 
 if __name__ == "__main__":

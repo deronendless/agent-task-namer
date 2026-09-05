@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=1600, initial-scale=1">
+  <title>Agent Task Namer — task title comparison</title>
+  <style>
+    :root {
+      --paper: #f8f8f3;
+      --ink: #263330;
+      --muted: #747e79;
+      --line: #e5e8e1;
+      --teal: #287c6e;
+      --teal-line: #a9cbc0;
+      --teal-wash: #eef6f0;
+      --body: "Helvetica Neue", "PingFang SC", "Hiragino Sans GB", Arial, sans-serif;
+      --display: "Avenir Next", "Helvetica Neue", "PingFang SC", Arial, sans-serif;
+      --mono: "SFMono-Regular", Menlo, Consolas, monospace;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      width: 1600px;
+      height: 1000px;
+      margin: 0;
+      overflow: hidden;
+      background: var(--paper);
+    }
+
+    body {
+      color: var(--ink);
+      font-family: var(--body);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .artboard {
+      position: relative;
+      width: 1600px;
+      height: 1000px;
+      isolation: isolate;
+    }
+
+    .background {
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      z-index: -1;
+      width: 1020px;
+      height: 638px;
+      object-fit: contain;
+    }
+
+    .heading {
+      position: absolute;
+      top: 96px;
+      left: 82px;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: var(--display);
+      font-size: 76px;
+      font-weight: 650;
+      line-height: 1.17;
+      letter-spacing: -3.6px;
+    }
+
+    .subtitle {
+      margin: 19px 0 0 3px;
+      color: #53655d;
+      font-size: 31px;
+      font-weight: 400;
+      line-height: 1.5;
+      letter-spacing: 0.3px;
+    }
+
+    .comparison {
+      position: absolute;
+      top: 319px;
+      left: 80px;
+      right: 80px;
+      display: grid;
+      grid-template-columns: 1fr 1.13fr;
+      gap: 32px;
+    }
+
+    .panel {
+      height: 507px;
+      overflow: hidden;
+      border: 1.5px solid #dce1da;
+      border-radius: 22px;
+      background: rgba(255, 255, 253, 0.95);
+      box-shadow: 0 8px 24px rgba(54, 68, 53, 0.025);
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      height: 96px;
+      margin: 0 33px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .panel-label {
+      margin: 0;
+      font-size: 28px;
+      font-weight: 550;
+      line-height: 1;
+      letter-spacing: 0.2px;
+    }
+
+    .before .panel-label { color: #707a74; }
+
+    .after {
+      position: relative;
+      border-color: var(--teal-line);
+      background: rgba(253, 255, 251, 0.97);
+    }
+
+    .after::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: var(--teal);
+    }
+
+    .after .panel-header { border-bottom-color: #d7e8dd; }
+    .after .panel-label { color: var(--teal); }
+
+    .task-list {
+      list-style: none;
+      padding: 0;
+      margin: 0 33px;
+    }
+
+    .task {
+      display: flex;
+      align-items: center;
+      height: 75px;
+      border-bottom: 1px solid var(--line);
+      white-space: nowrap;
+    }
+
+    .task:last-child { border-bottom: 0; }
+
+    .original {
+      color: #5e6762;
+      font-size: 25px;
+      font-weight: 400;
+      letter-spacing: 0;
+    }
+
+    .formatted {
+      border-bottom-color: #e2ece3;
+      color: #34473e;
+      font-size: 24px;
+      font-weight: 450;
+      letter-spacing: -0.2px;
+    }
+
+    .formatted .title {
+      display: block;
+      width: max-content;
+      white-space: pre;
+    }
+
+    .category { color: #315e51; }
+    .separator { color: #a5b9ad; }
+    .date {
+      font-family: var(--mono);
+      font-size: 22px;
+      font-weight: 400;
+      letter-spacing: -0.6px;
+      color: #7c8e82;
+    }
+
+    .footer {
+      position: absolute;
+      top: 875px;
+      left: 85px;
+      right: 82px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 52px;
+    }
+
+    .formula {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      color: #547165;
+      font-size: 23px;
+      letter-spacing: 0.4px;
+    }
+
+    .formula::before {
+      content: "";
+      width: 4px;
+      height: 27px;
+      margin-right: 2px;
+      border-radius: 2px;
+      background: var(--teal);
+    }
+
+    .formula .divider { color: #a0b3a8; }
+    .note { color: #879188; font-size: 19px; letter-spacing: 0.25px; }
+  </style>
+</head>
+<body>
+  <main class="artboard" aria-label="Agent Task Namer title comparison">
+    <img id="background" class="background" src="./background.png" alt="" decoding="sync">
+    <header class="heading">
+      <h1>Agent Task Namer</h1>
+      <p class="subtitle" id="subtitle"></p>
+    </header>
+    <section class="comparison" aria-label="Task titles before and after naming">
+      <article class="panel before">
+        <header class="panel-header"><h2 class="panel-label" id="before-label"></h2></header>
+        <ul class="task-list" id="before-tasks"></ul>
+      </article>
+      <article class="panel after">
+        <header class="panel-header"><h2 class="panel-label" id="after-label"></h2></header>
+        <ul class="task-list" id="after-tasks"></ul>
+      </article>
+    </section>
+    <footer class="footer">
+      <div class="formula" id="formula"></div>
+      <span class="note" id="note"></span>
+    </footer>
+  </main>
+  <script>
+    window.__ready = false;
+    const language = new URLSearchParams(window.location.search).get("lang") === "en" ? "en" : "zh";
+    const copy = {
+      zh: {
+        subtitle: "任务标题，一目了然", before: "使用前", after: "使用后",
+        formula: ["类型", "创建日期", "主题"], note: "命名效果示意",
+        original: ["Atlas 登录一直失败，帮忙看看", "能不能支持 CSV 文件导出", "报表页面加载有点慢", "把 Orbit 部署上线", "研究下 Atlas 该用什么数据库"],
+        categories: ["🐛 修复", "✨ 功能", "⚡ 优化", "🚀 发布", "🔬 研究"],
+        topics: ["Atlas 登录失败", "CSV 文件导出", "报表加载速度", "Orbit 部署上线", "Atlas 数据库选型"]
+      },
+      en: {
+        subtitle: "Task titles at a glance", before: "Before", after: "After",
+        formula: ["Type", "Created", "Topic"], note: "Illustrative task titles",
+        original: ["Help fix the Atlas login issue", "Can we add a CSV export?", "The report page loads slowly", "Deploy Orbit", "Which database should Atlas use?"],
+        categories: ["🐛 Fix", "✨ Feature", "⚡ Optimize", "🚀 Release", "🔬 Research"],
+        topics: ["Atlas login", "CSV export", "Report loading", "Orbit deployment", "Atlas database choice"]
+      }
+    }[language];
+
+    document.documentElement.lang = language === "en" ? "en" : "zh-CN";
+    document.getElementById("subtitle").textContent = copy.subtitle;
+    document.getElementById("before-label").textContent = copy.before;
+    document.getElementById("after-label").textContent = copy.after;
+    document.getElementById("note").textContent = copy.note;
+
+    function span(className, text) {
+      const element = document.createElement("span");
+      element.className = className;
+      element.textContent = text;
+      return element;
+    }
+
+    copy.original.forEach((text, index) => {
+      const original = document.createElement("li");
+      original.className = "task original";
+      original.textContent = text;
+      document.getElementById("before-tasks").append(original);
+
+      const formatted = document.createElement("li");
+      formatted.className = "task formatted";
+      const title = span("title", "");
+      title.append(span("category", copy.categories[index]), span("separator", " | "),
+        span("date", "260904"), span("separator", " | "), span("topic", copy.topics[index]));
+      formatted.append(title);
+      document.getElementById("after-tasks").append(formatted);
+    });
+
+    copy.formula.forEach((label, index) => {
+      if (index) document.getElementById("formula").append(span("divider", "|"));
+      document.getElementById("formula").append(span("field", label));
+    });
+
+    const background = document.getElementById("background");
+    const backgroundReady = background.complete ? Promise.resolve() : new Promise(resolve => {
+      background.addEventListener("load", resolve, { once: true });
+      background.addEventListener("error", resolve, { once: true });
+    });
+    Promise.all([document.fonts.ready, backgroundReady]).then(() => {
+      requestAnimationFrame(() => { window.__ready = true; });
+    });
+  </script>
+</body>
+</html>

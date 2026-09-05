@@ -1,0 +1,22 @@
+{
+  "name": "agent-task-namer",
+  "version": "0.1.0",
+  "description": "Consistent task titles with a bundled startup naming hook for local Codex tasks.",
+  "author": {
+    "name": "deronendless",
+    "url": "https://github.com/deronendless"
+  },
+  "homepage": "https://github.com/deronendless/agent-task-namer",
+  "repository": "https://github.com/deronendless/agent-task-namer",
+  "license": "MIT",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Agent Task Namer",
+    "shortDescription": "Consistent task titles in your language",
+    "longDescription": "Name local Codex tasks by category, creation date, and topic. New-task naming starts after Codex's initial hook trust. Existing user-chosen titles are preserved.",
+    "developerName": "deronendless",
+    "category": "Productivity",
+    "capabilities": ["Write"],
+    "defaultPrompt": ["Name this task using the standard format."]
+  }
+}

@@ -140,6 +140,8 @@ def history(sdk, state, session_id, directory, offset, limit):
             if not isinstance(item.message, dict) or item.message.get("role", item.type) != item.type:
                 continue
             content = item.message.get("content", [])
+            if not isinstance(content, (str, list)):
+                continue
             text = content if isinstance(content, str) else "\n".join(
                 block["text"] for block in content
                 if isinstance(block, dict) and block.get("type") == "text" and isinstance(block.get("text"), str)
@@ -159,7 +161,7 @@ def main():
         raw = sys.stdin.read(65537)
         request = json.loads(raw) if len(raw) <= 65536 else None
         response = handle_request(request)
-    except (ValueError, OSError, UnicodeError):
+    except (ValueError, OSError, UnicodeError, RecursionError):
         response = {"status": "invalid_request", "write_attempted": False, "write_succeeded": False}
     print(json.dumps(response, ensure_ascii=True, allow_nan=False))
 

@@ -4,6 +4,10 @@
 
 Give agent tasks consistent, easy-to-find titles. Works with Codex, Claude Code local CLI, and title suggestions in other agents.
 
+![Task titles before and after naming with type, creation date, and topic](assets/readme/before-after-en.png)
+
+*Illustrative comparison of the same tasks using consistent type, creation date, and topic.*
+
 ```text
 🐛 Fix | 260904 | Login callback failure
 📝 Docs | 260904 | Atlas deployment guide
@@ -22,7 +26,9 @@ Claude Code support is experimental; end-to-end validation is still pending.
 
 ## 1. Install
 
-Send this to your agent:
+For Codex automatic naming, this repository also provides a plugin containing the skill and its startup hook. The repository can be used as a plugin source through the [standard marketplace distribution workflow](https://developers.openai.com/plugins/build/plugins#how-local-marketplaces-work). No marketplace listing has been published yet.
+
+The standalone Skill remains supported. Send this to your agent:
 
 ```text
 Install the agent-task-namer skill from https://github.com/deronendless/agent-task-namer
@@ -58,13 +64,15 @@ Accurate, compliant titles and titles you explicitly chose are preserved. To cha
 
 ## Optional: name new tasks automatically
 
-Send this to Codex or Claude Code:
+**Codex plugin:** installation discovers the bundled hook without editing `hooks.json`. In the plugin's detail page, review its hook and choose **Trust all** once. Subsequent new tasks need no setup; changed hook definitions may need review again. Installing the plugin alone does not grant hook trust.
+
+**Standalone Skill or Claude Code:** send this to your agent:
 
 ```text
 Enable automatic naming for new tasks with agent-task-namer.
 ```
 
-This requires separate setup and client support; installation alone does not enable it. Follow your client's normal configuration review and trust flow. See [setup details](references/automatic.md).
+The standalone Skill requires separate hook setup and the client's normal trust flow. When switching to the Codex plugin, remove the old naming hook to avoid duplicate reminders. See [setup and migration details](references/automatic.md).
 
 ---
 

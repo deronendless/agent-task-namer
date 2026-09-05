@@ -8,7 +8,19 @@ Installing the skill alone provides explicit invocation and matching by its desc
 
 `startup`, `resume`, `clear`, `compact`, and Claude's `fork` are session events only; they do not establish that a task is new or when it was created. Wait for the first substantive user request. Resume, clear, compact, and fork preserve existing titles unless the user explicitly requests a rename. The skill chooses the [client workflow](clients.md); other agents receive suggestions only.
 
-## Codex configuration
+## Codex plugin installation
+
+The repository is also a native Codex plugin source: `.codex-plugin/plugin.json` declares the package, `skills/agent-task-namer/SKILL.md` is the plugin skill entry, and `hooks/hooks.json` bundles the `SessionStart` hook. Use the [standard plugin distribution workflow](https://developers.openai.com/plugins/build/plugins#how-local-marketplaces-work) to expose the repository through a Codex marketplace and install it through the client. This repository has not yet been published as a marketplace listing; do not present a source URL as an existing one-click installation link.
+
+Codex discovers the enabled plugin's bundled hook automatically. Users do not need to add it to their own `hooks.json` or `config.toml`. The local host must provide `python3` on `PATH`; the plugin does not bundle a Python runtime. Plugin commands resolve packaged files through `PLUGIN_ROOT`, which Codex supplies for the installed plugin; do not replace it with an author's machine-specific path.
+
+Installation does not grant hook trust. In the desktop app's plugin detail page, review the hook and choose **Trust all** to trust this plugin's pending hooks in one operation. **Review** opens the hook details. The CLI equivalent is `/hooks`. After the current definition is trusted and enabled, subsequent new tasks require no per-session setup. A changed definition may require review again. See the official [plugin hook trust rules](https://developers.openai.com/plugins/build/plugins#bundled-mcp-servers-and-lifecycle-hooks).
+
+When migrating from a standalone Skill hook, inspect the active hook sources and disable or remove only the previous `agent-task-namer` naming-hook entry before enabling the plugin hook. Codex merges hooks from different sources, so leaving both active produces duplicate reminders. Preserve unrelated hooks and settings. Do not register the plugin hook again in user configuration.
+
+To disable automatic naming while retaining on-demand naming, disable this plugin's naming hook in the app's Hooks settings or CLI `/hooks`. Disabling the entire plugin also removes its skill from use. Verify activation in a dedicated new task after the normal trust flow; installation or saved configuration alone is not verification.
+
+## Codex standalone Skill configuration
 
 The hook can be configured in `$CODEX_HOME/hooks.json` (usually `~/.codex/hooks.json`) or the corresponding `config.toml`. Inspect existing definitions before adding it, preserve other hooks, and avoid registering this script more than once. Hooks from multiple sources are merged for execution; do not install by overwriting the entire configuration file.
 
@@ -30,9 +42,9 @@ The example below shows the configuration structure. During installation, replac
 }
 ```
 
-Unmanaged hooks must be reviewed and trusted by the user through `/hooks` in the Codex CLI. New or changed hook definitions will not run until trusted. Do not edit trust records, use trust-bypass arguments, or claim that saving configuration means activation succeeded. If hooks are disabled in the current environment, explain that state first and follow the user's choice about enabling them.
+Unmanaged hooks must be reviewed and trusted by the user through the desktop app's Hooks settings or `/hooks` in the Codex CLI. New or changed hook definitions will not run until trusted. Do not edit trust records, use trust-bypass arguments, or claim that saving configuration means activation succeeded. These rules apply to both standalone and plugin-bundled hooks. If hooks are disabled in the current environment, explain that state first and follow the user's choice about enabling them.
 
-To disable automatic naming, disable this hook in `/hooks` or remove only its configuration entry. The skill remains available on demand. No scheduled tasks, background services, or direct changes to the Codex database are needed.
+To disable automatic naming, disable this hook in the app's Hooks settings or CLI `/hooks`, or remove only its configuration entry. The skill remains available on demand. No scheduled tasks, background services, or direct changes to the Codex database are needed.
 
 ## Claude Code local CLI setup
 

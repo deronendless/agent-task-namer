@@ -57,11 +57,11 @@ def main():
     args = parser.parse_args()
     try:
         event = json.load(sys.stdin)
-    except (ValueError, OSError):
+    except (ValueError, OSError, RecursionError):
         return
     output = hook_output(event, args.client)
     if output is not None:
-        print(json.dumps(output, ensure_ascii=False))
+        print(json.dumps(output))
 
 
 if __name__ == "__main__":

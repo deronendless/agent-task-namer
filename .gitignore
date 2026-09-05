@@ -7,5 +7,6 @@ __pycache__/
 
 # Local Codex configuration and private batch records
 hooks.json
+!hooks/hooks.json
 config.toml
 task-naming-runs/

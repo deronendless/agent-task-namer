@@ -57,6 +57,8 @@ Reasonable differences in topic wording are allowed, but do not relax dates, emo
 
 Run `python3 scripts/test_session_start.py` and `python3 scripts/test_claude_session.py`. Tests use the standard library and mocked SDK objects, never daily sessions. The original 17 groups above run as simulated Codex cases with official task tools available.
 
+For the native Codex plugin, also run `python3 scripts/test_plugin.py`. It checks skill-entry references and executes the bundled hook from a relocated package with a different working directory. It does not install or trust a real plugin, or replace live activation checks.
+
 Also evaluate these raw cases without showing the expected column to the evaluator:
 
 | Case | Input | Expected behavior |

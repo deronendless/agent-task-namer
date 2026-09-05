@@ -1,9 +1,12 @@
 """Run with python3 test_session_start.py. No live Codex tools are invoked."""
 
 import json
+import os
 from pathlib import Path
+import shutil
 import subprocess
 import sys
+import tempfile
 import unittest
 
 
@@ -39,6 +42,34 @@ class SessionStartTest(unittest.TestCase):
         })):
             with self.subTest(payload=payload):
                 self.assertEqual(self.run_hook(payload).stdout, "")
+
+    def test_excessive_json_depth_is_nonblocking(self):
+        payload = "[" * 2000 + "]" * 2000
+        for args in ((), ("--client", "claude-code")):
+            with self.subTest(args=args):
+                result = self.run_hook(payload, *args)
+                self.assertEqual(result.stdout, "")
+                self.assertEqual(result.stderr, "")
+
+    def test_unicode_install_path_with_ascii_stdout(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            skill = (Path(tmp) / "中文 skill").resolve()
+            (skill / "scripts").mkdir(parents=True)
+            (skill / "SKILL.md").write_text("Test skill", encoding="utf-8")
+            script = skill / "scripts" / SCRIPT.name
+            shutil.copyfile(SCRIPT, script)
+            event = {"hook_event_name": "SessionStart", "source": "startup",
+                     "session_id": "abc123", "cwd": str(skill)}
+            for args in ((), ("--client", "claude-code")):
+                with self.subTest(args=args):
+                    result = subprocess.run(
+                        [sys.executable, str(script), *args], input=json.dumps(event),
+                        text=True, capture_output=True, check=True,
+                        env={**os.environ, "PYTHONIOENCODING": "ascii"},
+                    )
+                    output = json.loads(result.stdout)["hookSpecificOutput"]
+                    self.assertIn(str(skill / "SKILL.md"), output["additionalContext"])
+                    self.assertEqual(result.stderr, "")
 
     def test_claude_and_subagent_routing(self):
         event = {"hook_event_name": "SessionStart", "source": "startup",

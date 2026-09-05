@@ -4,6 +4,10 @@
 
 给 Agent 任务统一命名，让任务更好找。支持 Codex、Claude Code 本地 CLI，以及其他 Agent 的标题建议。
 
+![任务标题命名前后对比：统一显示类型、创建日期和主题](assets/readme/before-after-zh.png)
+
+*命名效果示意：同一组任务，统一类型、创建日期与主题。*
+
 ```text
 🐛 修复 | 260904 | 登录回调失败
 📝 文档 | 260904 | Atlas 部署教程
@@ -22,7 +26,9 @@ Claude Code 适配为实验性支持，完整流程仍待验证。
 
 ## 1. 安装
 
-把这句话发给你使用的 Agent：
+Codex 自动命名还提供插件形式，包含 Skill 和启动 Hook。本仓库可作为插件源，按[官方市场分发流程](https://developers.openai.com/plugins/build/plugins#how-local-marketplaces-work)分发；目前尚未发布市场条目。
+
+原独立 Skill 安装方式继续支持。把这句话发给你使用的 Agent：
 
 ```text
 请从 https://github.com/deronendless/agent-task-namer 安装 agent-task-namer 这个 Skill。
@@ -58,13 +64,15 @@ $agent-task-namer 按规范重命名当前任务。
 
 ## 可选：新任务自动命名
 
-把这句话发给 Codex 或 Claude Code：
+**Codex 插件：**安装后会自动发现自带 Hook，无需编辑 `hooks.json`。在插件详情页审阅 Hook 并点击一次 **Trust all**，之后新任务无需再次配置。Hook 定义变动时可能需要重新审阅；安装插件本身不会授予 Hook 信任。
+
+**独立 Skill 或 Claude Code：**把这句话发给你使用的 Agent：
 
 ```text
 帮我启用 agent-task-namer 的新任务自动命名。
 ```
 
-自动命名需要单独配置和客户端支持，不会随安装自动启用。按对应客户端的提示审阅配置并完成信任流程。[查看配置详情](references/automatic.md)。
+独立 Skill 仍需单独配置 Hook，并完成客户端的信任流程。迁移到 Codex 插件时，移除原有命名 Hook，避免重复提醒。[查看配置与迁移详情](references/automatic.md)。
 
 ---
 

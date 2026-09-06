@@ -1,6 +1,6 @@
 interface:
   display_name: "Agent Task Namer"
-  short_description: "Consistent task titles in the user's language"
+  short_description: "Name tasks or diagnose automatic naming"
   default_prompt: "Use $agent-task-namer to name this task as emoji Type | YYMMDD | Topic in its main request's language, or suggest a title if this client cannot rename it."
 
 policy:

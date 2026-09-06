@@ -2,7 +2,7 @@
 
 [简体中文](README.zh-CN.md)
 
-Give agent tasks consistent, easy-to-find titles. Works with Codex, Claude Code local CLI, and title suggestions in other agents.
+Automatically add a type, creation date, and topic to Codex task titles, so you can find them in the sidebar.
 
 ![Task titles before and after naming with type, creation date, and topic](assets/readme/before-after-en.png)
 
@@ -14,68 +14,55 @@ Give agent tasks consistent, easy-to-find titles. Works with Codex, Claude Code 
 ⚡ 优化 | 260904 | 登录页面布局
 ```
 
-Each title follows the language of that task's main request. Dates stay tied to task creation, using Beijing time by default.
+Each title follows the language of that task's main request. Dates use the task's creation day in Beijing time by default and stay the same when you continue chatting. Titles you explicitly chose are preserved.
 
-| Client | Rename current task | Optional automatic naming | Batch and restore |
-|---|---|---|---|
-| Codex (official task tools required) | Supported | Supported | Supported |
-| Claude Code local CLI (optional SDK required) | Experimental | Experimental | Not included |
-| Other agents that can read skills | Suggestions only | Not included | Not included |
+## Get started in Codex
 
-Claude Code support is experimental; end-to-end validation is still pending.
+For **local tasks in Codex desktop**, with official task read and rename tools available. Automatic naming also requires **Python 3** and the one-time setup below.
 
-## 1. Install
-
-For Codex automatic naming, this repository also provides a plugin containing the skill and its startup hook. The repository can be used as a plugin source through the [standard marketplace distribution workflow](https://developers.openai.com/plugins/build/plugins#how-local-marketplaces-work). No marketplace listing has been published yet.
-
-The standalone Skill remains supported. Send this to your agent:
+For now, install the standalone Skill. Send this to Codex:
 
 ```text
 Install the agent-task-namer skill from https://github.com/deronendless/agent-task-namer/tree/main/skills/agent-task-namer
 ```
 
-For Claude Code, copy the repository's `skills/agent-task-namer/` directory to `~/.claude/skills/agent-task-namer/` and [set up the optional SDK](skills/agent-task-namer/references/automatic.md#claude-code-local-cli-setup) to rename sessions. Other agents can use their skill loader or read [skills/agent-task-namer/SKILL.md](skills/agent-task-namer/SKILL.md). The repository, skill directory, and invocation identifier are `agent-task-namer`.
-
-## 2. Use
-
-**Codex: rename the current task**
+After installation, try naming the current task:
 
 ```text
 $agent-task-namer Rename this task using the standard format.
 ```
 
-**Claude Code: rename the current session**
+Your sidebar title should change to the format shown above. Already accurate titles are kept; without a reliable creation time, you get a type and topic draft instead of a guessed date.
+
+## Name new tasks automatically
+
+With the standalone Skill installed, send:
 
 ```text
-/agent-task-namer Rename this session using the standard format.
+$agent-task-namer Enable automatic naming for new tasks.
 ```
 
-**Other agents: suggest a title**
+Complete the client's initial hook trust prompt, then create a new local task and make a normal request, such as “Help me fix the login error.” Naming runs once that task's first substantive request is clear; opening an empty task does not name it. Continuing or resuming an existing task does not trigger a new automatic rename.
+
+**Plugin option:** this repository also bundles the Skill and startup hook as a Codex plugin. Local installation and automatic naming have been verified on the author's machine; no public directory listing is available yet. If you already have the plugin installed, review its hook and choose **Trust all** in the plugin details; separate hook setup is unnecessary. See [setup and migration](skills/agent-task-namer/references/automatic.md) if you are switching from the standalone Skill.
+
+If naming does not work, send:
 
 ```text
-Read skills/agent-task-namer/SKILL.md in the repository and suggest a title based on this task’s main request.
+$agent-task-namer Check why automatic task naming is not working.
 ```
 
-Without a reliable creation time, you get a type and topic draft instead of a guessed date.
+See [troubleshooting](skills/agent-task-namer/references/troubleshooting.md) for checks and next steps.
 
-For Codex project tasks, ask `$agent-task-namer` to “Preview new titles without applying them” or “Organize the titles of all tasks in this project.”
+## More ways to use it
 
-Accurate, compliant titles and titles you explicitly chose are preserved. To change the language, just ask: “Translate this task's title into English, keeping the format.”
-
-## Optional: name new tasks automatically
-
-**Codex plugin:** installation discovers the bundled hook without editing `hooks.json`. In the plugin's detail page, review its hook and choose **Trust all** once. Subsequent new tasks need no setup; changed hook definitions may need review again. Installing the plugin alone does not grant hook trust.
-
-**Standalone Skill or Claude Code:** send this to your agent:
-
-```text
-Enable automatic naming for new tasks with agent-task-namer.
-```
-
-The standalone Skill requires separate hook setup and the client's normal trust flow. When switching to the Codex plugin, remove the old naming hook to avoid duplicate reminders. See [setup and migration details](skills/agent-task-namer/references/automatic.md).
+- **Preview or organize Codex tasks:** ask `$agent-task-namer` to “Preview new titles without applying them” or “Organize the titles of all tasks in this project.” [Batch rename and restore](skills/agent-task-namer/references/batch.md).
+- **Change the language:** ask “Translate this task's title into English, keeping the format.”
+- **Claude Code local CLI (experimental):** copy `skills/agent-task-namer/` to `~/.claude/skills/agent-task-namer/`, [set up the optional SDK](skills/agent-task-namer/references/automatic.md#claude-code-local-cli-setup), then use `/agent-task-namer Rename this session using the standard format.` End-to-end validation is pending; batch and restore are not included.
+- **Other agents:** load the [Skill](skills/agent-task-namer/SKILL.md) and ask for a title suggestion. Direct renaming is not included.
 
 ---
 
-[Detailed rules](skills/agent-task-namer/SKILL.md) · [Batch rename and restore](skills/agent-task-namer/references/batch.md) · [MIT License](LICENSE)
+[Detailed rules](skills/agent-task-namer/SKILL.md) · [MIT License](LICENSE)
 
 Community skill; not an official OpenAI or Anthropic product.

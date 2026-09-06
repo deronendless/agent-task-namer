@@ -1,7 +1,7 @@
 {
   "name": "agent-task-namer",
   "version": "0.1.0",
-  "description": "Consistent task titles with a bundled startup naming hook for local Codex tasks.",
+  "description": "Automatic titles for local Codex desktop tasks, with a workflow for diagnosing naming issues.",
   "author": {
     "name": "deronendless",
     "url": "https://github.com/deronendless"
@@ -12,11 +12,14 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Agent Task Namer",
-    "shortDescription": "Consistent task titles in your language",
-    "longDescription": "Name local Codex tasks by category, creation date, and topic. New-task naming starts after Codex's initial hook trust. Existing user-chosen titles are preserved.",
+    "shortDescription": "Find Codex tasks by type, date, and topic",
+    "longDescription": "Name local Codex desktop tasks in your language after the first substantive request. Requires official task tools, Python 3, and initial hook trust. Preserve user-chosen titles and diagnose naming issues on request.",
     "developerName": "deronendless",
     "category": "Productivity",
     "capabilities": ["Write"],
-    "defaultPrompt": ["Name this task using the standard format."]
+    "defaultPrompt": [
+      "Name this task using the standard format.",
+      "Check why automatic task naming is not working."
+    ]
   }
 }

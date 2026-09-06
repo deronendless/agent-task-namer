@@ -1,6 +1,6 @@
 ---
 name: agent-task-namer
-description: "Name Codex tasks and the current Claude Code session as emoji Type | YYMMDD | Topic in the user's language; suggest titles for other agents. Use for naming, trusted local naming reminders, or explicitly requested Codex batches and recorded restoration; discussion and preview alone do not rename tasks."
+description: "Name Codex tasks and the current Claude Code session as emoji Type | YYMMDD | Topic in the user's language; suggest titles for other agents. Use for naming, diagnosing why automatic naming did not run, trusted local naming reminders, or explicitly requested Codex batches and recorded restoration; diagnosis, discussion, and preview alone do not rename tasks."
 ---
 
 # Agent Task Namer
@@ -9,17 +9,18 @@ Name tasks as `emoji Type | YYMMDD | Topic`, for example `🐛 Fix | 260903 | Lo
 
 ## Client support
 
-Read [references/clients.md](references/clients.md) before client-specific reads or writes. Codex supports current-task naming and explicitly requested batches or restoration. Claude Code supports only its current session, through the optional official-SDK bridge. Other agents generate candidates only. Loading this skill does not itself supply title-reading, title-writing, or automatic-trigger capabilities.
+Read [references/clients.md](references/clients.md) before client-specific reads or writes. Codex supports current-task naming and explicitly requested batches or restoration. Claude Code support is experimental and covers only its current session, through the optional official-SDK bridge. Other agents generate candidates only. Loading this skill does not itself supply title-reading, title-writing, or automatic-trigger capabilities.
 
 Claude Code native context hints: session `${CLAUDE_SESSION_ID}`; project `${CLAUDE_PROJECT_DIR}`. Trust these values only when the runtime is confirmed to be Claude Code and the placeholders have actually been expanded by the host. Literal placeholders, copied chat text, and user-supplied IDs are not trusted current-session identity. A trusted Claude Code hook may supply the same identity and project context.
 
 ## Choose a mode
 
+- **Diagnose automatic naming:** For requests such as “检查一下为什么没有自动命名” or “Why did automatic naming not run?”, read [references/troubleshooting.md](references/troubleshooting.md). This mode takes precedence over a naming reminder: inspect and explain without renaming or changing installation/configuration. Follow an explicit request to fix, migrate, install, or rename within its actual scope; diagnosis alone supplies none of those actions.
 - **Current task:** Apply the workflow below when the user explicitly requests it or an installed, trusted local naming hook supplies a `SessionStart` reminder through `additionalContext`.
 - **Project batches and restoration (Codex only):** The user must explicitly authorize organizing a project or task set, or restoring a recorded batch. Read [references/batch.md](references/batch.md) first. A current-task naming reminder does not authorize changing other tasks. Do not run batch writes or recorded restoration in Claude Code or other agents.
 - **Discussion or preview:** Suggest titles without renaming. Once the user has authorized execution, complete the necessary checks and proceed without asking for confirmation again.
 
-Read [references/automatic.md](references/automatic.md) only when the user requests installation, changes, or troubleshooting of automatic triggering. Implicit skill matching is not a new-task lifecycle hook and cannot guarantee execution in every new chat. A single naming request does not authorize installing a hook, changing personalization, or creating an automation.
+Read [references/automatic.md](references/automatic.md) when installing or changing automatic triggering, or when the diagnosis needs configuration details. Implicit skill matching is not a new-task lifecycle hook and cannot guarantee execution in every new chat. A single naming request does not authorize installing a hook, changing personalization, or creating an automation.
 
 Read [references/validation.md](references/validation.md) when validating behavior for maintenance or publication; do not load acceptance cases during ordinary naming.
 

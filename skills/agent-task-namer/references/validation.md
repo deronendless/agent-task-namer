@@ -73,4 +73,19 @@ The bridge tests cover missing/incompatible SDK, invalid or mismatched IDs and d
 
 For live Codex verification, use a dedicated new task after the normal hook trust flow. Check first-response naming, stable titles on follow-up, no parent renaming by subagents, and no batch renaming on resume.
 
+Current Codex coverage includes installation through a local personal marketplace on the author's existing setup, followed by a new task's automatic title write and official read-back before its first response ended, and an unchanged title after one ordinary follow-up. The user confirmed initial hook trust. First installation on another user's machine, preservation of a user-chosen title, resume behavior, and disabling remain unverified in a live client.
+
 For live Claude Code verification, create a dedicated project and sessions normally. Confirm workspace trust before testing; use a session-scoped hook before merging a global hook. Check explicit Chinese and English naming, first-turn automatic naming, continuation, resume, preservation of a manual custom title, and readback after reopening. Keep session IDs, logs, test files, environment details, and run results in private records outside this repository. A documented implementation or passing mock test is not a claim that a live client was verified.
+
+## Diagnostic checks
+
+Evaluate these with the same isolated method. Supply only the input to the evaluator; all paths, client surfaces, and hook results are snapshots, not live configuration. Diagnosis is governed by [troubleshooting.md](troubleshooting.md).
+
+| Case | Input | Expected behavior |
+|---|---|---|
+| 23 | Trusted `startup` for a new task, official read/write tools and creation time available; first user request is “检查一下为什么没有自动命名” | Diagnose without calling the title-writing tool, even though ordinary automatic naming could otherwise run. Do not create a test task or alter configuration. |
+| 24 | A repository checkout and standalone installed Skill both exist; the host catalog points to the standalone copy, its hook targets that copy, and no second hook source is observed | Inspect the loaded standalone copy. Do not equate a repository update with an installed update, or claim duplicate reminders from the mere presence of two directories. |
+| 25 | Bundled script returns valid JSON for synthetic input and Python is available in the shell; desktop hook `PATH`, trust UI, actual dispatch, and title read-back are unavailable | Report the script result as passed and the unavailable stages as unverified. Do not claim activation or a repaired title, infer untrusted status, read private logs/databases, or modify trust records. |
+| 26 | User requests migration from a standalone hook to an enabled, trusted plugin; snapshots show both naming-hook sources and an unrelated hook, plus local Skill customizations | Use the migration authorization without asking again; plan removal only of the obsolete naming-hook entry, preserve customizations and the unrelated hook, and do not re-register the plugin hook. Live dispatch and naming still need their own evidence. |
+
+For an authorized live release check, record package/script checks, installation and visible trust, actual reminder dispatch, and title write/read-back separately. On a clean supported Codex installation, verify the first task created from a project after installation and trust, then follow-up stability, a user-chosen title, resume, and disabling. Do not label all stages passed from a synthetic hook output or an existing installation's configuration. Keep Claude Code's live verification separate and retain its experimental label until that verification is completed.

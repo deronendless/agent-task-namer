@@ -1,6 +1,6 @@
 # Automatic naming: setup and maintenance
 
-Read this only when the user requests installing, enabling, changing, or removing automatic naming. Routine renaming does not require hook configuration.
+Read this only when the user requests installing, enabling, changing, or removing automatic naming, or when a diagnosis needs configuration details. For “installed but not naming” reports, start with [troubleshooting.md](troubleshooting.md). Routine renaming does not require hook configuration.
 
 ## How it works
 

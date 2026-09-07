@@ -32,7 +32,7 @@ codex plugin add agent-task-namer@agent-task-namer
 如果当前版本不支持仓库 Marketplace，也可以把下面这句话发给 Codex，安装独立 Skill：
 
 ```text
-请从 https://github.com/deronendless/agent-task-namer/tree/v0.1.1/skills/agent-task-namer 安装 agent-task-namer 这个 Skill。
+请从 https://github.com/deronendless/agent-task-namer/tree/v0.1.2/skills/agent-task-namer 安装 agent-task-namer 这个 Skill。
 ```
 
 安装后，先试着给当前任务命名：

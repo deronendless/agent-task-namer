@@ -10,7 +10,7 @@ import tempfile
 import unittest
 
 
-SCRIPT = Path(__file__).with_name("session_start.py")
+SCRIPT = Path(__file__).with_name("session_start.py").resolve()
 
 
 class SessionStartTest(unittest.TestCase):

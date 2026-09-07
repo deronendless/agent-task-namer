@@ -1,6 +1,6 @@
 {
   "name": "agent-task-namer",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Automatic titles for local Codex desktop tasks, with a workflow for diagnosing naming issues.",
   "author": {
     "name": "deronendless",

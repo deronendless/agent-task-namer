@@ -10,7 +10,14 @@ Installing the skill alone provides explicit invocation and matching by its desc
 
 ## Codex plugin installation
 
-The repository is also a native Codex plugin source: `.codex-plugin/plugin.json` declares the package, `skills/agent-task-namer/SKILL.md` is the plugin skill entry, and `hooks/hooks.json` bundles the `SessionStart` hook. Use the [standard plugin distribution workflow](https://developers.openai.com/plugins/build/plugins#how-local-marketplaces-work) to expose the repository through a Codex marketplace and install it through the client. This repository has not yet been published as a marketplace listing; do not present a source URL as an existing one-click installation link.
+This public GitHub repository includes `.agents/plugins/marketplace.json` and can be added to Codex as a repository marketplace. Add it and install the plugin with:
+
+```sh
+codex plugin marketplace add deronendless/agent-task-namer
+codex plugin add agent-task-namer@agent-task-namer
+```
+
+Restart Codex, then review and trust the bundled Hook from the plugin detail page. This repository marketplace is separate from publication in OpenAI's universal Plugins Directory.
 
 Codex discovers the enabled plugin's bundled hook automatically. Users do not need to add it to their own `hooks.json` or `config.toml`. The local host must provide `python3` on `PATH`; the plugin does not bundle a Python runtime. Plugin commands resolve packaged files through `PLUGIN_ROOT`, which Codex supplies for the installed plugin; do not replace it with an author's machine-specific path.
 
@@ -19,6 +26,8 @@ Installation does not grant hook trust. In the desktop app's plugin detail page,
 When migrating from a standalone Skill hook, inspect the active hook sources and disable or remove only the previous `agent-task-namer` naming-hook entry before enabling the plugin hook. Codex merges hooks from different sources, so leaving both active produces duplicate reminders. Preserve unrelated hooks and settings. Do not register the plugin hook again in user configuration.
 
 To disable automatic naming while retaining on-demand naming, disable this plugin's naming hook in the app's Hooks settings or CLI `/hooks`. Disabling the entire plugin also removes its skill from use. Verify activation in a dedicated new task after the normal trust flow; installation or saved configuration alone is not verification.
+
+To refresh the repository catalog, run `codex plugin marketplace upgrade agent-task-namer`, then update or reinstall the plugin through Codex. A changed Hook definition may require trust review again.
 
 ## Codex standalone Skill configuration
 

@@ -20,10 +20,19 @@
 
 适用于具备官方任务读取、改名工具的 **Codex 桌面端本地任务**。自动命名还需要 **Python 3**，并完成下方的一次性配置。
 
-目前推荐安装独立 Skill。把这句话发给 Codex：
+将这个公开 GitHub 仓库作为 Codex 仓库 Marketplace 添加并安装插件。在终端运行：
+
+```sh
+codex plugin marketplace add deronendless/agent-task-namer
+codex plugin add agent-task-namer@agent-task-namer
+```
+
+重启 Codex，打开 **Plugins**，选择 **Agent Task Namer**，审阅内置启动 Hook 后点击 **Trust all**。
+
+如果当前版本不支持仓库 Marketplace，也可以把下面这句话发给 Codex，安装独立 Skill：
 
 ```text
-请从 https://github.com/deronendless/agent-task-namer/tree/main/skills/agent-task-namer 安装 agent-task-namer 这个 Skill。
+请从 https://github.com/deronendless/agent-task-namer/tree/v0.1.1/skills/agent-task-namer 安装 agent-task-namer 这个 Skill。
 ```
 
 安装后，先试着给当前任务命名：
@@ -36,7 +45,9 @@ $agent-task-namer 按规范重命名当前任务。
 
 ## 让新任务自动命名
 
-装好独立 Skill 后，发送：
+插件已经包含自动命名 Hook，完成信任后不需要单独配置。
+
+如果安装的是独立 Skill，发送：
 
 ```text
 $agent-task-namer 帮我启用新任务自动命名。
@@ -44,7 +55,7 @@ $agent-task-namer 帮我启用新任务自动命名。
 
 按客户端提示完成首次 Hook 信任，然后新建一个本地任务，像平常一样提问，例如“帮我修复登录报错”。首次实质请求明确后才会命名，打开空任务不会命名。续聊、恢复旧任务不会触发新的自动改名。
 
-**插件安装方式：**本仓库也已将 Skill 和启动 Hook 打包成 Codex 插件，目前尚未公开上架。如果你通过本地 marketplace 安装了插件，在详情页审阅 Hook 并点击 **Trust all** 即可，无需单独配置 Hook。从独立 Skill 切换时，请查看[配置与迁移说明](skills/agent-task-namer/references/automatic.md)。
+不要同时启用插件和独立 Skill 的命名 Hook，否则会产生重复提醒。切换安装方式时请查看[配置与迁移说明](skills/agent-task-namer/references/automatic.md)。
 
 没有生效时，直接发送：
 

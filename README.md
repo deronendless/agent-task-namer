@@ -20,10 +20,19 @@ Each title follows the language of that task's main request. Dates use the task'
 
 For **local tasks in Codex desktop**, with official task read and rename tools available. Automatic naming also requires **Python 3** and the one-time setup below.
 
-For now, install the standalone Skill. Send this to Codex:
+Install the plugin by adding this public GitHub repository as a Codex repository marketplace. Run:
+
+```sh
+codex plugin marketplace add deronendless/agent-task-namer
+codex plugin add agent-task-namer@agent-task-namer
+```
+
+Restart Codex. Open **Plugins**, select **Agent Task Namer**, review the bundled startup Hook, and choose **Trust all**.
+
+If repository marketplaces are unavailable, install the standalone Skill by sending this to Codex:
 
 ```text
-Install the agent-task-namer skill from https://github.com/deronendless/agent-task-namer/tree/main/skills/agent-task-namer
+Install the agent-task-namer skill from https://github.com/deronendless/agent-task-namer/tree/v0.1.1/skills/agent-task-namer
 ```
 
 After installation, try naming the current task:
@@ -36,7 +45,9 @@ Your sidebar title should change to the format shown above. Already accurate tit
 
 ## Name new tasks automatically
 
-With the standalone Skill installed, send:
+The plugin already includes the automatic-naming Hook, so it needs no separate Hook configuration after you trust it.
+
+If you installed the standalone Skill, send:
 
 ```text
 $agent-task-namer Enable automatic naming for new tasks.
@@ -44,7 +55,7 @@ $agent-task-namer Enable automatic naming for new tasks.
 
 Complete the client's initial hook trust prompt, then create a new local task and make a normal request, such as “Help me fix the login error.” Naming runs once that task's first substantive request is clear; opening an empty task does not name it. Continuing or resuming an existing task does not trigger a new automatic rename.
 
-**Plugin option:** this repository also bundles the Skill and startup hook as a Codex plugin. A public marketplace listing is not available yet. If you installed it through a local marketplace, review its hook and choose **Trust all** in the plugin details; separate hook setup is unnecessary. See [setup and migration](skills/agent-task-namer/references/automatic.md) if you are switching from the standalone Skill.
+Do not enable both the plugin and standalone naming Hooks, because they would emit duplicate reminders. See [setup and migration](skills/agent-task-namer/references/automatic.md) when switching installation methods.
 
 If naming does not work, send:
 

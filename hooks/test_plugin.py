@@ -51,6 +51,27 @@ class PluginTest(unittest.TestCase):
         self.assertIn(entry, skill_directory.glob("*/SKILL.md"))
         self.assert_self_contained_skill(entry.parent.resolve())
 
+    def test_repository_marketplace_pins_the_release(self):
+        manifest = json.loads((REPOSITORY / ".codex-plugin/plugin.json").read_text(encoding="utf-8"))
+        marketplace = json.loads(
+            (REPOSITORY / ".agents/plugins/marketplace.json").read_text(encoding="utf-8")
+        )
+        self.assertEqual(marketplace["name"], "agent-task-namer")
+        self.assertEqual(marketplace["interface"]["displayName"], "Agent Task Namer")
+        self.assertEqual(len(marketplace["plugins"]), 1)
+        plugin = marketplace["plugins"][0]
+        self.assertEqual(plugin["name"], manifest["name"])
+        self.assertEqual(plugin["source"], {
+            "source": "url",
+            "url": f'{manifest["repository"]}.git',
+            "ref": f'v{manifest["version"]}',
+        })
+        self.assertEqual(plugin["policy"], {
+            "installation": "AVAILABLE",
+            "authentication": "ON_INSTALL",
+        })
+        self.assertEqual(plugin["category"], manifest["interface"]["category"])
+
     def test_packaged_hook_runs_from_another_working_directory(self):
         configuration = json.loads((self.root / "hooks/hooks.json").read_text(encoding="utf-8"))
         commands = [

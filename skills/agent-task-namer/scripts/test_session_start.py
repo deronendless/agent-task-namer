@@ -34,6 +34,32 @@ class SessionStartTest(unittest.TestCase):
                 self.assertNotIn("private-transcript-path", result.stdout)
                 self.assertEqual(result.stderr, "")
 
+    def test_codex_startup_is_actionable_and_other_sources_preserve_title(self):
+        skill = str(SCRIPT.parent.parent / "SKILL.md")
+        event = {"hook_event_name": "SessionStart", "session_id": "thr_123"}
+        event["source"] = "startup"
+        context = json.loads(self.run_hook(json.dumps(event)).stdout)["hookSpecificOutput"]["additionalContext"]
+        for phrase in ("STARTUP/root", f"first read {skill}", "authorizes one automatic rename",
+                       "read_thread", "set_thread_title", "omit threadId", "to verify",
+                       "If the Skill cannot be read, skip naming", "Root agent only",
+                       "subagents must ignore this reminder"):
+            self.assertIn(phrase, context)
+        self.assertLess(context.index(f"first read {skill}"), context.index("read_thread"))
+        self.assertLess(context.index("read_thread"), context.index("set_thread_title"))
+        self.assertLess(context.index("set_thread_title"), context.index("to verify"))
+        self.assertLess(len(context), 1200)
+
+        for source in ("resume", "clear", "compact"):
+            with self.subTest(source=source):
+                event["source"] = source
+                context = json.loads(self.run_hook(json.dumps(event)).stdout)["hookSpecificOutput"]["additionalContext"]
+                self.assertIn(f"source={source}", context)
+                self.assertIn("does not authorize automatic naming", context)
+                self.assertIn("Preserve the current title", context)
+                self.assertNotIn("set_thread_title", context)
+                self.assertNotIn("authorizes one automatic rename", context)
+                self.assertLess(len(context), 1200)
+
     def test_irrelevant_or_invalid_input_is_nonblocking(self):
         for payload in ("bad json", "null", "[]", "{}", json.dumps({
             "hook_event_name": "SubagentStart", "source": "startup", "session_id": "thr_123",
@@ -75,19 +101,27 @@ class SessionStartTest(unittest.TestCase):
         event = {"hook_event_name": "SessionStart", "source": "startup",
                  "session_id": "abc123", "cwd": str(SCRIPT.parent),
                  "agent_type": "custom-main-agent"}
-        for args in ((), ("--client", "claude-code")):
-            context = json.loads(self.run_hook(json.dumps(event), *args).stdout)["hookSpecificOutput"]["additionalContext"]
-            for phrase in ("Root agent only", f"Read {SCRIPT.parent.parent / 'SKILL.md'}",
-                           "first substantive user request", "before the first final reply",
-                           "Respect preview-only requests"):
-                self.assertIn(phrase, context)
+        context = json.loads(self.run_hook(json.dumps(event), "--client", "claude-code").stdout)["hookSpecificOutput"]["additionalContext"]
+        for phrase in ("CLAUDE STARTUP/root", f"first read {SCRIPT.parent.parent / 'SKILL.md'}",
+                       '"session_id": "abc123"', "official SDK bridge", "rename once",
+                       "inspect custom_title to verify", "If the Skill cannot be read, skip naming",
+                       "Root agent only", "subagents must ignore this reminder"):
+            self.assertIn(phrase, context)
+        self.assertNotIn("set_thread_title", context)
+        self.assertLess(len(context), 1200)
         for source in ("startup", "resume", "clear", "compact", "fork"):
             event["source"] = source
             result = self.run_hook(json.dumps(event), "--client", "claude-code")
             context = json.loads(result.stdout)["hookSpecificOutput"]["additionalContext"]
-            self.assertIn("Claude Code", context)
+            self.assertIn("CLAUDE", context)
             self.assertIn('"source": "' + source + '"', context)
             self.assertNotIn("set_thread_title", context)
+            if source != "startup":
+                self.assertIn("does not authorize automatic naming", context)
+                self.assertIn("Preserve the current title", context)
+                self.assertNotIn("rename once", context)
+                self.assertNotIn("authorizes one automatic rename", context)
+            self.assertLess(len(context), 1200)
         event["source"] = "startup"
         for field in ("agent_id", "parent_tool_use_id"):
             for args in ((), ("--client", "claude-code")):

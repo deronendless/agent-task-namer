@@ -32,7 +32,7 @@ Restart Codex. Open **Plugins**, select **Agent Task Namer**, review the bundled
 If repository marketplaces are unavailable, install the standalone Skill by sending this to Codex:
 
 ```text
-Install the agent-task-namer skill from https://github.com/deronendless/agent-task-namer/tree/v0.1.2/skills/agent-task-namer
+Install the agent-task-namer skill from https://github.com/deronendless/agent-task-namer/tree/v0.1.3/skills/agent-task-namer
 ```
 
 After installation, try naming the current task:

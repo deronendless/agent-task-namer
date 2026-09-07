@@ -93,9 +93,15 @@ class PluginTest(unittest.TestCase):
         self.assertEqual(output["hookEventName"], "SessionStart")
         self.assertIn(str(self.root / "skills/agent-task-namer/SKILL.md"), output["additionalContext"])
         self.assertIn("synthetic_plugin_session", output["additionalContext"])
-        self.assertIn("authorizes one automatic rename", output["additionalContext"])
+        self.assertIn("automatic task-title metadata update", output["additionalContext"])
         self.assertIn("read_thread", output["additionalContext"])
         self.assertIn("set_thread_title", output["additionalContext"])
+        self.assertIn("plausible or nonempty title alone is not evidence of user choice",
+                      output["additionalContext"])
+        self.assertIn("restriction explicitly limited to project files or content",
+                      output["additionalContext"])
+        self.assertIn("not to make any changes at all cancels it",
+                      output["additionalContext"])
         self.assertEqual(result.stderr, "")
 
     def test_standalone_skill_runs_without_plugin_files(self):

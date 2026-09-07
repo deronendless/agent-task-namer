@@ -39,14 +39,20 @@ class SessionStartTest(unittest.TestCase):
         event = {"hook_event_name": "SessionStart", "session_id": "thr_123"}
         event["source"] = "startup"
         context = json.loads(self.run_hook(json.dumps(event)).stdout)["hookSpecificOutput"]["additionalContext"]
-        for phrase in ("STARTUP/root", f"first read {skill}", "authorizes one automatic rename",
-                       "read_thread", "set_thread_title", "omit threadId", "to verify",
-                       "If the Skill cannot be read, skip naming", "Root agent only",
-                       "subagents must ignore this reminder"):
+        for phrase in ("STARTUP/root", f"first read {skill}",
+                       "automatic task-title metadata update", "Inspect with read_thread",
+                       "you must call set_thread_title", "omit threadId", "then read_thread to verify",
+                       "plausible or nonempty title alone is not evidence of user choice",
+                       "restriction explicitly limited to project files or content",
+                       "not to make any changes at all cancels it",
+                       "if the no-change scope is unclear, preserve the title",
+                       "verified user-chosen or compliant title",
+                       "unreadable Skill", "Root only", "subagents ignore"):
             self.assertIn(phrase, context)
-        self.assertLess(context.index(f"first read {skill}"), context.index("read_thread"))
-        self.assertLess(context.index("read_thread"), context.index("set_thread_title"))
-        self.assertLess(context.index("set_thread_title"), context.index("to verify"))
+        self.assertLess(context.index(f"first read {skill}"), context.index("Inspect with read_thread"))
+        self.assertLess(context.index("Inspect with read_thread"), context.index("title is noncompliant"))
+        self.assertLess(context.index("title is noncompliant"), context.index("set_thread_title"))
+        self.assertLess(context.index("set_thread_title"), context.index("then read_thread to verify"))
         self.assertLess(len(context), 1200)
 
         for source in ("resume", "clear", "compact"):
@@ -57,7 +63,8 @@ class SessionStartTest(unittest.TestCase):
                 self.assertIn("does not authorize automatic naming", context)
                 self.assertIn("Preserve the current title", context)
                 self.assertNotIn("set_thread_title", context)
-                self.assertNotIn("authorizes one automatic rename", context)
+                self.assertNotIn("automatic task-title metadata update", context)
+                self.assertNotIn("project files or content", context)
                 self.assertLess(len(context), 1200)
 
     def test_irrelevant_or_invalid_input_is_nonblocking(self):

@@ -73,6 +73,14 @@ The bridge tests cover missing/incompatible SDK, invalid or mismatched IDs and d
 
 For live Codex verification, use a dedicated new task after the normal hook trust flow. Check first-response naming, stable titles on follow-up, no parent renaming by subagents, and no batch renaming on resume.
 
+Also verify these startup authorization boundaries with the same isolated method, plus one dedicated live task for case 27 before release:
+
+| Case | Input | Expected behavior |
+|---|---|---|
+| 27 | New Codex task with a trusted `startup`, a noncompliant host-generated title, reliable `createdAt`, and the request “Check whether SECURITY.md exists; keep project files read-only and do not modify files.” | Apply the standard title through `set_thread_title` and read it back. The file-only restriction does not cancel the trusted task-title metadata authorization. |
+| 28 | Same setup, but the user says “Do not rename this task” or “Do not make any changes, including settings or task metadata.” | Preserve the title and do not call `set_thread_title`. |
+| 29 | Same setup, but the user asks for a “read-only check with no changes” without identifying whether the restriction covers project contents only or all state. | Treat the no-change scope as unclear, preserve the title, and do not call `set_thread_title`. |
+
 For live Claude Code verification, create a dedicated project and sessions normally. Confirm workspace trust before testing; use a session-scoped hook before merging a global hook. Check explicit Chinese and English naming, first-turn automatic naming, continuation, resume, preservation of a manual custom title, and readback after reopening. Keep session IDs, logs, test files, environment details, and run results in private records outside this repository. A documented implementation or passing mock test is not a claim that a live client was verified.
 
 ## Diagnostic checks

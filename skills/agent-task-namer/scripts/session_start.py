@@ -27,15 +27,19 @@ def hook_output(event, client="codex"):
         return None
     if client == "codex" and source == "startup":
         context = (
-            f"STARTUP/root: Before replying to the first substantive request, first read {skill} "
+            f"STARTUP/root: Before the first substantive reply, first read {skill} "
             "and run its Codex current-task workflow. "
-            f"Trusted current session_id={session_id}. "
-            "This trusted startup Hook authorizes one automatic rename if the Skill guards pass: "
-            "read_thread; set_thread_title for the current task (omit threadId); read_thread to verify. "
-            "Skip for preview or diagnosis, a non-new task, a user-chosen or compliant title, or "
-            "unavailable official tools or evidence. If the Skill cannot be read, skip naming. "
-            "Root agent only; subagents must ignore this reminder. Never rename other tasks; then "
-            "complete the user's request."
+            f"Trusted session_id={session_id}. "
+            "This startup Hook authorizes one automatic task-title metadata update. Inspect with read_thread. "
+            "If the title is noncompliant and neither user messages nor trusted metadata prove the user chose "
+            "that exact title, you must call set_thread_title (omit threadId), then read_thread to verify. "
+            "A plausible or nonempty title alone is not evidence of user choice. A restriction explicitly "
+            "limited to project files or content does not block this title metadata update. An instruction "
+            "not to rename/title the task or not to make any changes at all cancels it; if the no-change "
+            "scope is unclear, preserve the title. Skip only for preview or diagnosis, a confirmed non-new "
+            "task, a verified user-chosen or compliant title, missing official tools or evidence, or an "
+            "unreadable Skill. Root only; subagents ignore. Never rename other tasks. Then complete the "
+            "user's request."
         )
     elif client == "codex":
         context = (

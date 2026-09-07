@@ -44,7 +44,7 @@ $agent-task-namer 帮我启用新任务自动命名。
 
 按客户端提示完成首次 Hook 信任，然后新建一个本地任务，像平常一样提问，例如“帮我修复登录报错”。首次实质请求明确后才会命名，打开空任务不会命名。续聊、恢复旧任务不会触发新的自动改名。
 
-**插件安装方式：**本仓库也已将 Skill 和启动 Hook 打包成 Codex 插件。已在作者本机验证本地安装与自动命名，尚未公开上架。如果你已经安装插件，在详情页审阅 Hook 并点击 **Trust all** 即可，无需单独配置 Hook。从独立 Skill 切换时，请查看[配置与迁移说明](skills/agent-task-namer/references/automatic.md)。
+**插件安装方式：**本仓库也已将 Skill 和启动 Hook 打包成 Codex 插件，目前尚未公开上架。如果你通过本地 marketplace 安装了插件，在详情页审阅 Hook 并点击 **Trust all** 即可，无需单独配置 Hook。从独立 Skill 切换时，请查看[配置与迁移说明](skills/agent-task-namer/references/automatic.md)。
 
 没有生效时，直接发送：
 

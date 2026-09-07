@@ -44,7 +44,7 @@ $agent-task-namer Enable automatic naming for new tasks.
 
 Complete the client's initial hook trust prompt, then create a new local task and make a normal request, such as “Help me fix the login error.” Naming runs once that task's first substantive request is clear; opening an empty task does not name it. Continuing or resuming an existing task does not trigger a new automatic rename.
 
-**Plugin option:** this repository also bundles the Skill and startup hook as a Codex plugin. Local installation and automatic naming have been verified on the author's machine; no public directory listing is available yet. If you already have the plugin installed, review its hook and choose **Trust all** in the plugin details; separate hook setup is unnecessary. See [setup and migration](skills/agent-task-namer/references/automatic.md) if you are switching from the standalone Skill.
+**Plugin option:** this repository also bundles the Skill and startup hook as a Codex plugin. A public marketplace listing is not available yet. If you installed it through a local marketplace, review its hook and choose **Trust all** in the plugin details; separate hook setup is unnecessary. See [setup and migration](skills/agent-task-namer/references/automatic.md) if you are switching from the standalone Skill.
 
 If naming does not work, send:
 

@@ -73,8 +73,6 @@ The bridge tests cover missing/incompatible SDK, invalid or mismatched IDs and d
 
 For live Codex verification, use a dedicated new task after the normal hook trust flow. Check first-response naming, stable titles on follow-up, no parent renaming by subagents, and no batch renaming on resume.
 
-Current Codex coverage includes installation through a local personal marketplace on the author's existing setup, followed by a new task's automatic title write and official read-back before its first response ended, and an unchanged title after one ordinary follow-up. The user confirmed initial hook trust. First installation on another user's machine, preservation of a user-chosen title, resume behavior, and disabling remain unverified in a live client.
-
 For live Claude Code verification, create a dedicated project and sessions normally. Confirm workspace trust before testing; use a session-scoped hook before merging a global hook. Check explicit Chinese and English naming, first-turn automatic naming, continuation, resume, preservation of a manual custom title, and readback after reopening. Keep session IDs, logs, test files, environment details, and run results in private records outside this repository. A documented implementation or passing mock test is not a claim that a live client was verified.
 
 ## Diagnostic checks

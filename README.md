@@ -8,12 +8,6 @@ Automatically add a type, creation date, and topic to Codex task titles, so you 
 
 *Illustrative comparison of the same tasks using consistent type, creation date, and topic.*
 
-```text
-🐛 Fix | 260904 | Login callback failure
-📝 Docs | 260904 | Atlas deployment guide
-⚡ 优化 | 260904 | 登录页面布局
-```
-
 Each title follows the language of that task's main request. Dates use the task's creation day in Beijing time by default and stay the same when you continue chatting. Titles you explicitly chose are preserved.
 
 ## Get started in Codex

@@ -32,7 +32,7 @@ Restart Codex. Open **Plugins**, select **Agent Task Namer**, review the bundled
 If repository marketplaces are unavailable, install the standalone Skill by sending this to Codex:
 
 ```text
-Install the agent-task-namer skill from https://github.com/deronendless/agent-task-namer/tree/v0.1.4/skills/agent-task-namer
+Install the agent-task-namer skill from https://github.com/deronendless/agent-task-namer/tree/v0.1.5/skills/agent-task-namer
 ```
 
 After installation, try naming the current task:
@@ -67,10 +67,24 @@ See [troubleshooting](skills/agent-task-namer/references/troubleshooting.md) for
 
 ## More ways to use it
 
+The plugin page offers three starters: **name this task**, **preview project titles**, and **diagnose automatic naming**. Preview does not apply changes.
+
 - **Preview or organize Codex tasks:** ask `$agent-task-namer` to “Preview new titles without applying them” or “Organize the titles of all tasks in this project.” [Batch rename and restore](skills/agent-task-namer/references/batch.md).
 - **Change the language:** ask “Translate this task's title into English, keeping the format.”
 - **Claude Code local CLI (experimental):** copy `skills/agent-task-namer/` to `~/.claude/skills/agent-task-namer/`, [set up the optional SDK](skills/agent-task-namer/references/automatic.md#claude-code-local-cli-setup), then use `/agent-task-namer Rename this session using the standard format.` End-to-end validation is pending; batch and restore are not included.
 - **Other agents:** load the [Skill](skills/agent-task-namer/SKILL.md) and ask for a title suggestion. Direct renaming is not included.
+
+## Validation
+
+Run the offline checks from the repository root:
+
+```sh
+python3 -m unittest discover -s skills/agent-task-namer/scripts
+python3 -m unittest discover -s hooks
+python3 skills/agent-task-namer/scripts/eval_cases.py check
+```
+
+The structured cases cover naming eligibility, languages, dates, and readback failures. `check` validates case structure only. See [behavior evaluation](skills/agent-task-namer/references/validation.md) for blind simulated traces and separate live-client checks.
 
 ---
 

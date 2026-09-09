@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256" role="img" aria-labelledby="title">
+  <title id="title">Agent Task Namer</title>
+  <rect width="256" height="256" rx="56" fill="#237E70"/>
+  <g fill="#F8F8F2">
+    <rect x="48" y="56" width="160" height="40" rx="12"/>
+    <rect x="48" y="108" width="160" height="40" rx="12"/>
+    <rect x="48" y="160" width="160" height="40" rx="12"/>
+  </g>
+  <g fill="#237E70">
+    <rect x="62" y="68" width="16" height="16" rx="4"/>
+    <rect x="62" y="120" width="16" height="16" rx="4"/>
+    <rect x="62" y="172" width="16" height="16" rx="4"/>
+    <rect x="94" y="72" width="96" height="8" rx="4"/>
+    <rect x="94" y="124" width="72" height="8" rx="4"/>
+    <rect x="94" y="176" width="88" height="8" rx="4"/>
+  </g>
+</svg>

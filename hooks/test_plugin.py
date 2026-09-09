@@ -21,7 +21,7 @@ class PluginTest(unittest.TestCase):
         self.addCleanup(temporary.cleanup)
         self.root = (Path(temporary.name) / "中文 plugin cache" / "agent-task-namer").resolve()
         self.root.mkdir(parents=True)
-        for directory in (".codex-plugin", "hooks", "skills"):
+        for directory in (".codex-plugin", "hooks", "skills", "assets"):
             shutil.copytree(REPOSITORY / directory, self.root / directory,
                             ignore=shutil.ignore_patterns("__pycache__", "*.py[cod]"))
         self.project = Path(temporary.name) / "unrelated project"
@@ -50,6 +50,19 @@ class PluginTest(unittest.TestCase):
         entry = skill_directory / "agent-task-namer/SKILL.md"
         self.assertIn(entry, skill_directory.glob("*/SKILL.md"))
         self.assert_self_contained_skill(entry.parent.resolve())
+
+    def test_packaged_display_assets_and_starter_prompts(self):
+        manifest = json.loads((self.root / ".codex-plugin/plugin.json").read_text(encoding="utf-8"))
+        interface = manifest["interface"]
+        paths = [interface["composerIcon"], interface["logo"], *interface["screenshots"]]
+        for relative in paths:
+            target = (self.root / relative).resolve()
+            self.assertIn(self.root, target.parents)
+            self.assertTrue(target.is_file())
+        for relative in interface["screenshots"]:
+            self.assertTrue((self.root / relative).read_bytes().startswith(b"\x89PNG\r\n\x1a\n"))
+        self.assertLessEqual(len(interface["defaultPrompt"]), 3)
+        self.assertTrue(all(0 < len(prompt) <= 128 for prompt in interface["defaultPrompt"]))
 
     def test_repository_marketplace_pins_the_release(self):
         manifest = json.loads((REPOSITORY / ".codex-plugin/plugin.json").read_text(encoding="utf-8"))
@@ -93,15 +106,9 @@ class PluginTest(unittest.TestCase):
         self.assertEqual(output["hookEventName"], "SessionStart")
         self.assertIn(str(self.root / "skills/agent-task-namer/SKILL.md"), output["additionalContext"])
         self.assertIn("synthetic_plugin_session", output["additionalContext"])
-        self.assertIn("automatic task-title metadata update", output["additionalContext"])
+        self.assertIn("automatic naming eligibility", output["additionalContext"])
         self.assertIn("read_thread", output["additionalContext"])
         self.assertIn("set_thread_title", output["additionalContext"])
-        self.assertIn("plausible or nonempty title alone is not evidence of user choice",
-                      output["additionalContext"])
-        self.assertIn("restriction explicitly limited to project files or content",
-                      output["additionalContext"])
-        self.assertIn("not to make any changes at all cancels it",
-                      output["additionalContext"])
         self.assertEqual(result.stderr, "")
 
     def test_standalone_skill_runs_without_plugin_files(self):

@@ -1,6 +1,6 @@
 {
   "name": "agent-task-namer",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Automatic titles for local Codex desktop tasks, with a workflow for diagnosing naming issues.",
   "author": {
     "name": "deronendless",
@@ -13,13 +13,33 @@
   "interface": {
     "displayName": "Agent Task Namer",
     "shortDescription": "Find Codex tasks by type, date, and topic",
-    "longDescription": "Name local Codex desktop tasks in your language after the first substantive request. Requires official task tools, Python 3, and initial hook trust. Preserve user-chosen titles and diagnose naming issues on request.",
+    "longDescription": "Name local Codex desktop tasks in the language of their main request. Keep user-chosen titles and stable creation dates. Preview project titles or diagnose automatic naming. Automatic naming requires official task tools, Python 3, and initial Hook trust. Claude Code support is experimental.",
     "developerName": "deronendless",
     "category": "Productivity",
-    "capabilities": ["Write"],
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
     "defaultPrompt": [
       "Name this task using the standard format.",
+      "Preview task titles in this project without applying them.",
       "Check why automatic task naming is not working."
-    ]
-  }
+    ],
+    "brandColor": "#237E70",
+    "composerIcon": "./assets/icon.svg",
+    "logo": "./assets/icon.svg",
+    "screenshots": [
+      "./assets/readme/before-after-en.png",
+      "./assets/readme/before-after-zh.png"
+    ],
+    "websiteURL": "https://github.com/deronendless/agent-task-namer"
+  },
+  "keywords": [
+    "task-naming",
+    "session-titles",
+    "codex",
+    "claude-code",
+    "productivity",
+    "任务命名"
+  ]
 }

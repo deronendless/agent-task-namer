@@ -39,21 +39,13 @@ class SessionStartTest(unittest.TestCase):
         event = {"hook_event_name": "SessionStart", "session_id": "thr_123"}
         event["source"] = "startup"
         context = json.loads(self.run_hook(json.dumps(event)).stdout)["hookSpecificOutput"]["additionalContext"]
-        for phrase in ("STARTUP/root", f"first read {skill}",
-                       "automatic task-title metadata update", "Inspect with read_thread",
-                       "you must call set_thread_title", "omit threadId", "then read_thread to verify",
-                       "plausible or nonempty title alone is not evidence of user choice",
-                       "restriction explicitly limited to project files or content",
-                       "not to make any changes at all cancels it",
-                       "if the no-change scope is unclear, preserve the title",
-                       "verified user-chosen or compliant title",
-                       "unreadable Skill", "Root only", "subagents ignore"):
+        # Protocol wiring only; naming decisions are evaluated with blind cases.
+        for phrase in ("STARTUP/root", skill, "session_id=thr_123", "source=startup",
+                       "automatic naming eligibility", "read_thread", "set_thread_title",
+                       "omit threadId", "Root only", "subagents ignore"):
             self.assertIn(phrase, context)
-        self.assertLess(context.index(f"first read {skill}"), context.index("Inspect with read_thread"))
-        self.assertLess(context.index("Inspect with read_thread"), context.index("title is noncompliant"))
-        self.assertLess(context.index("title is noncompliant"), context.index("set_thread_title"))
-        self.assertLess(context.index("set_thread_title"), context.index("then read_thread to verify"))
-        self.assertLess(len(context), 1200)
+        self.assertLess(context.index(skill), context.index("set_thread_title"))
+        self.assertLess(len(context), 800)
 
         for source in ("resume", "clear", "compact"):
             with self.subTest(source=source):

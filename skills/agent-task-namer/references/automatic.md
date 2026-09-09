@@ -6,7 +6,7 @@ Read this only when the user requests installing, enabling, changing, or removin
 
 Installing the skill alone provides explicit invocation and matching by its description. For Codex and Claude Code's `SessionStart` event, `scripts/session_start.py` emits `hookSpecificOutput.additionalContext` to remind the main agent to read this skill. It does not call a model, read conversation transcripts, rename tasks, or save state. No arguments retain the original Codex behavior; `--client claude-code` selects Claude Code. Unknown clients fail without emitting a reminder. Subagent events and identities are skipped; a custom main-agent `agent_type` alone is not a subagent identity.
 
-`startup`, `resume`, `clear`, `compact`, and Claude's `fork` are session events only; they do not establish that a task is new or when it was created. Wait for the first substantive user request. Resume, clear, compact, and fork preserve existing titles unless the user explicitly requests a rename. The skill chooses the [client workflow](clients.md); other agents receive suggestions only.
+The Hook carries the trusted identity, lifecycle event, and scope of the reminder. Naming eligibility is maintained in [the main Skill](../SKILL.md#automatic-naming-eligibility); the Hook does not decide newness, language, date, user-title protection, or no-change scope. Lifecycle events are not creation timestamps. The skill selects the [client workflow](clients.md).
 
 ## Codex plugin installation
 

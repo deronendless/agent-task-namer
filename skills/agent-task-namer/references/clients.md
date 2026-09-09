@@ -12,6 +12,8 @@ A skill that can be loaded is not necessarily able to rename a client's sessions
 
 ## Codex
 
+`createdAt` is Unix time in seconds. Convert the actual creation timestamp using the timezone rule in the main Skill.
+
 - Confirm the current task ID from trusted runtime context, `CODEX_THREAD_ID`, or the current `session_id` provided by the trusted local naming hook. Do not copy an ID from older messages. If the ID or task identity cannot be confirmed, preserve the title.
 - Use the official `read_thread` for the current title, `createdAt`, and substantive context. Start with `turnLimit: 2, includeOutputs: false`; read only enough earlier context to identify the task's actual goal and language. Do not enumerate project tasks just to obtain the current task's date.
 - Rename only with the official `set_thread_title`. Omit `threadId` when naming the current task. Read back using `read_thread` with the confirmed current task ID and verify the exact candidate; an unclear response must be read back before any targeted retry.

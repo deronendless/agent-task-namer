@@ -32,7 +32,7 @@ codex plugin add agent-task-namer@agent-task-namer
 如果当前版本不支持仓库 Marketplace，也可以把下面这句话发给 Codex，安装独立 Skill：
 
 ```text
-请从 https://github.com/deronendless/agent-task-namer/tree/v0.1.4/skills/agent-task-namer 安装 agent-task-namer 这个 Skill。
+请从 https://github.com/deronendless/agent-task-namer/tree/v0.1.5/skills/agent-task-namer 安装 agent-task-namer 这个 Skill。
 ```
 
 安装后，先试着给当前任务命名：
@@ -67,10 +67,24 @@ $agent-task-namer 检查一下为什么没有自动命名。
 
 ## 更多用法
 
+插件页面提供三个入口：**命名当前任务**、**预览项目标题**和**诊断自动命名**。预览不会执行改名。
+
 - **预览或整理 Codex 任务：**让 `$agent-task-namer` “预览新标题，先不要执行改名”，或“整理当前项目的所有任务命名”。[批量改名与恢复](skills/agent-task-namer/references/batch.md)。
 - **切换语言：**直接说“保留格式，把当前任务标题改成英文”。
 - **Claude Code 本地 CLI（实验性）：**将 `skills/agent-task-namer/` 复制到 `~/.claude/skills/agent-task-namer/`，[安装可选 SDK](skills/agent-task-namer/references/automatic.md#claude-code-local-cli-setup) 后使用 `/agent-task-namer 按规范重命名当前会话。` 完整流程仍待验证，暂不支持批量整理与恢复。
 - **其他 Agent：**加载 [Skill](skills/agent-task-namer/SKILL.md) 后生成标题建议，不提供直接改名。
+
+## 验证
+
+在仓库根目录运行离线检查：
+
+```sh
+python3 -m unittest discover -s skills/agent-task-namer/scripts
+python3 -m unittest discover -s hooks
+python3 skills/agent-task-namer/scripts/eval_cases.py check
+```
+
+结构化案例覆盖命名条件、语言、日期和回读失败。`check` 仅检查案例结构；独立盲测与真实客户端检查见[行为评测说明](skills/agent-task-namer/references/validation.md)。
 
 ---
 

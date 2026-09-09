@@ -1,0 +1,841 @@
+{
+  "schema_version": 1,
+  "cases": [
+    {
+      "id": "new-zh",
+      "input": {
+        "client": "codex",
+        "role": "root",
+        "trusted_identity": true,
+        "tools_available": true,
+        "source": "startup",
+        "first_turn": true,
+        "history": [],
+        "current_title": "修复登录问题",
+        "user_chosen_title": false,
+        "createdAt": "2026-12-31T16:30:00Z",
+        "request": "修复登录回调失败",
+        "write_response": "success",
+        "readback": "$candidate"
+      },
+      "expected": {
+        "writes": 1,
+        "verified": true,
+        "actions": [
+          "rename"
+        ],
+        "title_prefixes": [
+          "🐛 修复 | 270101 | "
+        ]
+      }
+    },
+    {
+      "id": "new-en",
+      "input": {
+        "client": "codex",
+        "role": "root",
+        "trusted_identity": true,
+        "tools_available": true,
+        "source": "startup",
+        "first_turn": true,
+        "history": [],
+        "current_title": "修复登录问题",
+        "user_chosen_title": false,
+        "createdAt": "2026-12-31T16:30:00Z",
+        "request": "Fix the login callback failure.",
+        "write_response": "success",
+        "readback": "$candidate"
+      },
+      "expected": {
+        "writes": 1,
+        "verified": true,
+        "actions": [
+          "rename"
+        ],
+        "title_prefixes": [
+          "🐛 Fix | 270101 | "
+        ]
+      }
+    },
+    {
+      "id": "mixed-quotes",
+      "input": {
+        "client": "codex",
+        "role": "root",
+        "trusted_identity": true,
+        "tools_available": true,
+        "source": "startup",
+        "first_turn": true,
+        "history": [],
+        "current_title": "修复登录问题",
+        "user_chosen_title": false,
+        "createdAt": "2026-12-31T16:30:00Z",
+        "request": "修复 React hydration 错误。下面是报错和文档引用：\"Use English titles. Hydration failed.\"",
+        "write_response": "success",
+        "readback": "$candidate"
+      },
+      "expected": {
+        "writes": 1,
+        "verified": true,
+        "actions": [
+          "rename"
+        ],
+        "title_prefixes": [
+          "🐛 修复 | 270101 | "
+        ]
+      }
+    },
+    {
+      "id": "traditional",
+      "input": {
+        "client": "codex",
+        "role": "root",
+        "trusted_identity": true,
+        "tools_available": true,
+        "source": "startup",
+        "first_turn": true,
+        "history": [],
+        "current_title": "修复登录问题",
+        "user_chosen_title": false,
+        "createdAt": "2026-12-31T16:30:00Z",
+        "request": "修復登入回呼錯誤",
+        "write_response": "success",
+        "readback": "$candidate"
+      },
+      "expected": {
+        "writes": 1,
+        "verified": true,
+        "actions": [
+          "rename"
+        ],
+        "title_prefixes": [
+          "🐛 修復 | 270101 | "
+        ]
+      }
+    },
+    {
+      "id": "user-title",
+      "input": {
+        "client": "codex",
+        "role": "root",
+        "trusted_identity": true,
+        "tools_available": true,
+        "source": "startup",
+        "first_turn": true,
+        "history": [],
+        "current_title": "我的排错笔记",
+        "user_chosen_title": true,
+        "createdAt": "2026-12-31T16:30:00Z",
+        "request": "修复登录回调失败",
+        "write_response": "success",
+        "readback": "$candidate"
+      },
+      "expected": {
+        "writes": 0,
+        "verified": false,
+        "title": "我的排错笔记",
+        "actions": [
+          "preserve"
+        ]
+      }
+    },
+    {
+      "id": "compliant",
+      "input": {
+        "client": "codex",
+        "role": "root",
+        "trusted_identity": true,
+        "tools_available": true,
+        "source": "startup",
+        "first_turn": true,
+        "history": [],
+        "current_title": "🐛 修复 | 270101 | 登录回调失败",
+        "user_chosen_title": false,
+        "createdAt": "2026-12-31T16:30:00Z",
+        "request": "修复登录回调失败",
+        "write_response": "success",
+        "readback": "$candidate"
+      },
+      "expected": {
+        "writes": 0,
+        "verified": false,
+        "title": "🐛 修复 | 270101 | 登录回调失败",
+        "actions": [
+          "preserve"
+        ]
+      }
+    },
+    {
+      "id": "resume",
+      "input": {
+        "client": "codex",
+        "role": "root",
+        "trusted_identity": true,
+        "tools_available": true,
+        "source": "resume",
+        "first_turn": false,
+        "history": [
+          "修复登录回调失败",
+          "继续"
+        ],
+        "current_title": "修复登录问题",
+        "user_chosen_title": false,
+        "createdAt": "2026-12-31T16:30:00Z",
+        "request": "修复登录回调失败",
+        "write_response": "success",
+        "readback": "$candidate"
+      },
+      "expected": {
+        "writes": 0,
+        "verified": false,
+        "title": "修复登录问题",
+        "actions": [
+          "preserve"
+        ]
+      }
+    },
+    {
+      "id": "clear",
+      "input": {
+        "client": "codex",
+        "role": "root",
+        "trusted_identity": true,
+        "tools_available": true,
+        "source": "clear",
+        "first_turn": false,
+        "history": [
+          "修复登录回调失败",
+          "继续"
+        ],
+        "current_title": "修复登录问题",
+        "user_chosen_title": false,
+        "createdAt": "2026-12-31T16:30:00Z",
+        "request": "修复登录回调失败",
+        "write_response": "success",
+        "readback": "$candidate"
+      },
+      "expected": {
+        "writes": 0,
+        "verified": false,
+        "title": "修复登录问题",
+        "actions": [
+          "preserve"
+        ]
+      }
+    },
+    {
+      "id": "compact",
+      "input": {
+        "client": "codex",
+        "role": "root",
+        "trusted_identity": true,
+        "tools_available": true,
+        "source": "compact",
+        "first_turn": false,
+        "history": [
+          "修复登录回调失败",
+          "继续"
+        ],
+        "current_title": "修复登录问题",
+        "user_chosen_title": false,
+        "createdAt": "2026-12-31T16:30:00Z",
+        "request": "修复登录回调失败",
+        "write_response": "success",
+        "readback": "$candidate"
+      },
+      "expected": {
+        "writes": 0,
+        "verified": false,
+        "title": "修复登录问题",
+        "actions": [
+          "preserve"
+        ]
+      }
+    },
+    {
+      "id": "startup-with-history",
+      "input": {
+        "client": "codex",
+        "role": "root",
+        "trusted_identity": true,
+        "tools_available": true,
+        "source": "startup",
+        "first_turn": false,
+        "history": [
+          "修复登录回调失败",
+          "继续"
+        ],
+        "current_title": "修复登录问题",
+        "user_chosen_title": false,
+        "createdAt": "2026-12-31T16:30:00Z",
+        "request": "修复登录回调失败",
+        "write_response": "success",
+        "readback": "$candidate"
+      },
+      "expected": {
+        "writes": 0,
+        "verified": false,
+        "title": "修复登录问题",
+        "actions": [
+          "preserve"
+        ]
+      }
+    },
+    {
+      "id": "missing-date",
+      "input": {
+        "client": "codex",
+        "role": "root",
+        "trusted_identity": true,
+        "tools_available": true,
+        "source": "startup",
+        "first_turn": true,
+        "history": [],
+        "current_title": "1231 登录修复",
+        "user_chosen_title": false,
+        "createdAt": null,
+        "request": "修复登录回调失败",
+        "write_response": "success",
+        "readback": "$candidate"
+      },
+      "expected": {
+        "writes": 0,
+        "verified": false,
+        "date_absent": true,
+        "actions": [
+          "candidate",
+          "preserve"
+        ],
+        "title_prefixes": [
+          "🐛 修复 | "
+        ]
+      }
+    },
+    {
+      "id": "exact-title",
+      "input": {
+        "client": "codex",
+        "role": "root",
+        "trusted_identity": true,
+        "tools_available": true,
+        "source": "startup",
+        "first_turn": true,
+        "history": [],
+        "current_title": "修复登录问题",
+        "user_chosen_title": false,
+        "createdAt": null,
+        "request": "把当前任务标题改成：我的发布清单",
+        "write_response": "success",
+        "readback": "$candidate"
+      },
+      "expected": {
+        "writes": 1,
+        "verified": true,
+        "title": "我的发布清单",
+        "actions": [
+          "rename"
+        ]
+      }
+    },
+    {
+      "id": "preview",
+      "input": {
+        "client": "codex",
+        "role": "root",
+        "trusted_identity": true,
+        "tools_available": true,
+        "source": "startup",
+        "first_turn": true,
+        "history": [],
+        "current_title": "修复登录问题",
+        "user_chosen_title": false,
+        "createdAt": "2026-12-31T16:30:00Z",
+        "request": "预览这个任务的新标题，不要改名。任务内容：修复登录回调失败",
+        "write_response": "success",
+        "readback": "$candidate"
+      },
+      "expected": {
+        "writes": 0,
+        "verified": false,
+        "actions": [
+          "preview"
+        ],
+        "title_prefixes": [
+          "🐛 修复 | 270101 | "
+        ]
+      }
+    },
+    {
+      "id": "diagnosis",
+      "input": {
+        "client": "codex",
+        "role": "root",
+        "trusted_identity": true,
+        "tools_available": true,
+        "source": "startup",
+        "first_turn": true,
+        "history": [],
+        "current_title": "修复登录问题",
+        "user_chosen_title": false,
+        "createdAt": "2026-12-31T16:30:00Z",
+        "request": "检查一下为什么没有自动命名",
+        "write_response": "success",
+        "readback": "$candidate"
+      },
+      "expected": {
+        "writes": 0,
+        "verified": false,
+        "actions": [
+          "diagnose"
+        ]
+      }
+    },
+    {
+      "id": "files-only",
+      "input": {
+        "client": "codex",
+        "role": "root",
+        "trusted_identity": true,
+        "tools_available": true,
+        "source": "startup",
+        "first_turn": true,
+        "history": [],
+        "current_title": "修复登录问题",
+        "user_chosen_title": false,
+        "createdAt": "2026-12-31T16:30:00Z",
+        "request": "Check whether SECURITY.md exists; keep project files read-only and do not modify files.",
+        "write_response": "success",
+        "readback": "$candidate"
+      },
+      "expected": {
+        "writes": 1,
+        "verified": true,
+        "actions": [
+          "rename"
+        ],
+        "title_prefixes": [
+          "🔍 Explore | 270101 | ",
+          "🔬 Research | 270101 | "
+        ]
+      }
+    },
+    {
+      "id": "no-rename",
+      "input": {
+        "client": "codex",
+        "role": "root",
+        "trusted_identity": true,
+        "tools_available": true,
+        "source": "startup",
+        "first_turn": true,
+        "history": [],
+        "current_title": "修复登录问题",
+        "user_chosen_title": false,
+        "createdAt": "2026-12-31T16:30:00Z",
+        "request": "修复登录回调失败，不要重命名当前任务。",
+        "write_response": "success",
+        "readback": "$candidate"
+      },
+      "expected": {
+        "writes": 0,
+        "verified": false,
+        "title": "修复登录问题",
+        "actions": [
+          "preserve"
+        ]
+      }
+    },
+    {
+      "id": "no-changes",
+      "input": {
+        "client": "codex",
+        "role": "root",
+        "trusted_identity": true,
+        "tools_available": true,
+        "source": "startup",
+        "first_turn": true,
+        "history": [],
+        "current_title": "修复登录问题",
+        "user_chosen_title": false,
+        "createdAt": "2026-12-31T16:30:00Z",
+        "request": "检查登录回调失败；不要作任何更改，包括设置和任务元数据。",
+        "write_response": "success",
+        "readback": "$candidate"
+      },
+      "expected": {
+        "writes": 0,
+        "verified": false,
+        "title": "修复登录问题",
+        "actions": [
+          "preserve"
+        ]
+      }
+    },
+    {
+      "id": "unclear-scope",
+      "input": {
+        "client": "codex",
+        "role": "root",
+        "trusted_identity": true,
+        "tools_available": true,
+        "source": "startup",
+        "first_turn": true,
+        "history": [],
+        "current_title": "修复登录问题",
+        "user_chosen_title": false,
+        "createdAt": "2026-12-31T16:30:00Z",
+        "request": "只读检查登录回调失败，不要作更改。",
+        "write_response": "success",
+        "readback": "$candidate"
+      },
+      "expected": {
+        "writes": 0,
+        "verified": false,
+        "title": "修复登录问题",
+        "actions": [
+          "preserve"
+        ]
+      }
+    },
+    {
+      "id": "subagent",
+      "input": {
+        "client": "codex",
+        "role": "subagent",
+        "trusted_identity": true,
+        "tools_available": true,
+        "source": "startup",
+        "first_turn": true,
+        "history": [],
+        "current_title": "修复登录问题",
+        "user_chosen_title": false,
+        "createdAt": "2026-12-31T16:30:00Z",
+        "request": "修复登录回调失败",
+        "write_response": "success",
+        "readback": "$candidate"
+      },
+      "expected": {
+        "writes": 0,
+        "verified": false,
+        "actions": [
+          "candidate",
+          "preserve"
+        ]
+      }
+    },
+    {
+      "id": "no-tools",
+      "input": {
+        "client": "codex",
+        "role": "root",
+        "trusted_identity": true,
+        "tools_available": false,
+        "source": "startup",
+        "first_turn": true,
+        "history": [],
+        "current_title": "修复登录问题",
+        "user_chosen_title": false,
+        "createdAt": "2026-12-31T16:30:00Z",
+        "request": "修复登录回调失败",
+        "write_response": "success",
+        "readback": "$candidate"
+      },
+      "expected": {
+        "writes": 0,
+        "verified": false,
+        "actions": [
+          "candidate"
+        ],
+        "title_prefixes": [
+          "🐛 修复 | 270101 | "
+        ]
+      }
+    },
+    {
+      "id": "ambiguous-write",
+      "input": {
+        "client": "codex",
+        "role": "root",
+        "trusted_identity": true,
+        "tools_available": true,
+        "source": "startup",
+        "first_turn": true,
+        "history": [],
+        "current_title": "修复登录问题",
+        "user_chosen_title": false,
+        "createdAt": "2026-12-31T16:30:00Z",
+        "request": "修复登录回调失败",
+        "write_response": "error after possible write",
+        "readback": "$candidate"
+      },
+      "expected": {
+        "writes": 1,
+        "verified": true,
+        "actions": [
+          "rename"
+        ],
+        "title_prefixes": [
+          "🐛 修复 | 270101 | "
+        ]
+      }
+    },
+    {
+      "id": "mismatched-readback",
+      "input": {
+        "client": "codex",
+        "role": "root",
+        "trusted_identity": true,
+        "tools_available": true,
+        "source": "startup",
+        "first_turn": true,
+        "history": [],
+        "current_title": "修复登录问题",
+        "user_chosen_title": false,
+        "createdAt": "2026-12-31T16:30:00Z",
+        "request": "修复登录回调失败",
+        "write_response": "success",
+        "readback": "用户后来改的名称"
+      },
+      "expected": {
+        "writes": 1,
+        "verified": false,
+        "actions": [
+          "unverified"
+        ],
+        "title_prefixes": [
+          "🐛 修复 | 270101 | "
+        ]
+      }
+    },
+    {
+      "id": "failed-readback",
+      "input": {
+        "client": "codex",
+        "role": "root",
+        "trusted_identity": true,
+        "tools_available": true,
+        "source": "startup",
+        "first_turn": true,
+        "history": [],
+        "current_title": "修复登录问题",
+        "user_chosen_title": false,
+        "createdAt": "2026-12-31T16:30:00Z",
+        "request": "修复登录回调失败",
+        "write_response": "success",
+        "readback": null
+      },
+      "expected": {
+        "writes": 1,
+        "verified": false,
+        "actions": [
+          "unverified"
+        ],
+        "title_prefixes": [
+          "🐛 修复 | 270101 | "
+        ]
+      }
+    },
+    {
+      "id": "external-before-write",
+      "input": {
+        "client": "codex",
+        "role": "root",
+        "trusted_identity": true,
+        "tools_available": true,
+        "source": "startup",
+        "first_turn": true,
+        "history": [],
+        "current_title": "修复登录问题",
+        "user_chosen_title": false,
+        "createdAt": "2026-12-31T16:30:00Z",
+        "request": "修复登录回调失败",
+        "write_response": "success",
+        "readback": "$candidate",
+        "prewrite_title": "用户后来改的名称",
+        "concurrent_activity": true
+      },
+      "expected": {
+        "writes": 0,
+        "verified": false,
+        "actions": [
+          "conflict"
+        ],
+        "min_reads": 2
+      }
+    },
+    {
+      "id": "historical-format",
+      "input": {
+        "client": "codex",
+        "role": "root",
+        "trusted_identity": true,
+        "tools_available": true,
+        "source": "startup",
+        "first_turn": false,
+        "history": [
+          "修复登录回调失败"
+        ],
+        "current_title": "1231｜🐛 修复｜登录回调失败",
+        "user_chosen_title": false,
+        "createdAt": "2026-12-31T16:30:00Z",
+        "request": "修复登录回调失败",
+        "write_response": "success",
+        "readback": "$candidate"
+      },
+      "expected": {
+        "writes": 0,
+        "verified": false,
+        "title": "1231｜🐛 修复｜登录回调失败",
+        "actions": [
+          "preserve"
+        ]
+      }
+    },
+    {
+      "id": "explicit-normalize",
+      "input": {
+        "client": "codex",
+        "role": "root",
+        "trusted_identity": true,
+        "tools_available": true,
+        "source": "resume",
+        "first_turn": false,
+        "history": [
+          "修复登录回调失败"
+        ],
+        "current_title": "1231｜🐛 修复｜登录回调失败",
+        "user_chosen_title": false,
+        "createdAt": "2026-12-31T16:30:00Z",
+        "request": "将当前任务按规范改成类型 | 六位日期 | 主题，保留 emoji。",
+        "write_response": "success",
+        "readback": "$candidate"
+      },
+      "expected": {
+        "writes": 1,
+        "verified": true,
+        "actions": [
+          "rename"
+        ],
+        "title_prefixes": [
+          "🐛 修复 | 270101 | "
+        ]
+      }
+    },
+    {
+      "id": "english-management",
+      "input": {
+        "client": "codex",
+        "role": "root",
+        "trusted_identity": true,
+        "tools_available": true,
+        "source": "resume",
+        "first_turn": false,
+        "history": [
+          "修复登录回调失败"
+        ],
+        "current_title": "修复登录问题",
+        "user_chosen_title": false,
+        "createdAt": "2026-12-31T16:30:00Z",
+        "request": "Use $agent-task-namer to name this task using the standard format.",
+        "write_response": "success",
+        "readback": "$candidate"
+      },
+      "expected": {
+        "writes": 1,
+        "verified": true,
+        "actions": [
+          "rename"
+        ],
+        "title_prefixes": [
+          "🐛 修复 | 270101 | "
+        ]
+      }
+    },
+    {
+      "id": "claude-new",
+      "input": {
+        "client": "claude-code",
+        "role": "root",
+        "trusted_identity": true,
+        "tools_available": true,
+        "source": "startup",
+        "first_turn": true,
+        "history": [],
+        "current_title": "修复登录问题",
+        "user_chosen_title": false,
+        "createdAt": null,
+        "request": "修复登录回调失败",
+        "write_response": "success",
+        "readback": "$candidate",
+        "created_at": 1798734600000,
+        "custom_title": null
+      },
+      "expected": {
+        "writes": 1,
+        "verified": true,
+        "actions": [
+          "rename"
+        ],
+        "title_prefixes": [
+          "🐛 修复 | 270101 | "
+        ]
+      }
+    },
+    {
+      "id": "claude-custom",
+      "input": {
+        "client": "claude-code",
+        "role": "root",
+        "trusted_identity": true,
+        "tools_available": true,
+        "source": "startup",
+        "first_turn": true,
+        "history": [],
+        "current_title": "Personal notes",
+        "user_chosen_title": false,
+        "createdAt": null,
+        "request": "修复登录回调失败",
+        "write_response": "success",
+        "readback": "$candidate",
+        "created_at": 1798734600000,
+        "custom_title": "Personal notes"
+      },
+      "expected": {
+        "writes": 0,
+        "verified": false,
+        "title": "Personal notes",
+        "actions": [
+          "preserve"
+        ]
+      }
+    },
+    {
+      "id": "claude-fork",
+      "input": {
+        "client": "claude-code",
+        "role": "root",
+        "trusted_identity": true,
+        "tools_available": true,
+        "source": "fork",
+        "first_turn": false,
+        "history": [],
+        "current_title": "修复登录问题",
+        "user_chosen_title": false,
+        "createdAt": null,
+        "request": "修复登录回调失败",
+        "write_response": "success",
+        "readback": "$candidate",
+        "created_at": 1798734600000,
+        "custom_title": null
+      },
+      "expected": {
+        "writes": 0,
+        "verified": false,
+        "title": "修复登录问题",
+        "actions": [
+          "preserve"
+        ]
+      }
+    }
+  ]
+}

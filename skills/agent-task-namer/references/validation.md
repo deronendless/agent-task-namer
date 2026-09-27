@@ -36,6 +36,12 @@ Use a unique private temporary directory when multiple runs are active. Export h
 
 Keep prompts containing personal context, run results, model/environment details, and troubleshooting records outside the repository. Publish reusable fictional cases only. Never pass a fictional case ID to real tools.
 
+### Context cost
+
+Compare the baseline and updated copies with the same tokenizer. For routine naming, count `SKILL.md` plus only the selected host's reference: `clients.md` for Codex, `claude-desktop.md` for Desktop Code, or `claude-cli.md` for the CLI. Record the evaluator's actual reference reads to catch accidental loading of unrelated clients, installation instructions, or batch/evaluation material. Known skip conditions should exit before client-specific reads.
+
+Keep write/readback and title-protection checks intact. Rule-text token reductions do not measure total usage savings: Hook context, conversation history, tool output, reasoning and caching remain separate. Pair size comparisons with the same blind behavioral cases; retain measurements and run results privately.
+
 ## Additional manual scenarios
 
 These extend the structured current-task cases without duplicating their expectations. Evaluate with the same blind-input method; supply only the scenario, not the expected result. Task names below are fictional. Unless specified otherwise, identity/tools and authorization are confirmed; creation is `2026-09-04T00:00:00Z` and the main request is Chinese.

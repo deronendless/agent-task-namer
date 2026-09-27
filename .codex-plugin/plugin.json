@@ -1,6 +1,6 @@
 {
   "name": "agent-task-namer",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Automatic titles for local Codex desktop tasks, with a workflow for diagnosing naming issues.",
   "author": {
     "name": "deronendless",
@@ -13,7 +13,7 @@
   "interface": {
     "displayName": "Agent Task Namer",
     "shortDescription": "Find Codex tasks by type, date, and topic",
-    "longDescription": "Name local Codex desktop tasks in the language of their main request. Keep user-chosen titles and stable creation dates. Preview project titles or diagnose automatic naming. Automatic naming requires official task tools, Python 3, and initial Hook trust. Claude Code support is experimental.",
+    "longDescription": "Name local Codex desktop tasks in the language of their main request. Keep user-chosen titles and stable creation dates. Preview project titles or diagnose automatic naming. Automatic naming requires official task tools, Python 3, and initial Hook trust. The standalone Skill also supports local Claude Desktop Code sessions; the Claude Code CLI bridge remains experimental.",
     "developerName": "deronendless",
     "category": "Productivity",
     "capabilities": [

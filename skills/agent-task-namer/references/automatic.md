@@ -65,7 +65,7 @@ Install the repository's `skills/agent-task-namer/` directory at `~/.claude/skil
 
 ### Desktop Code
 
-For local sessions in the Desktop app's **Code** tab, use the [native current-session tools](clients.md#claude-desktop-code-local-sessions). No SDK environment is required. The Desktop app ships its own Claude Code runtime, so the terminal's `claude --version` does not establish Desktop capabilities. Check the tools exposed in the actual session. Desktop local sessions load `~/.claude/skills/` and share hook settings with the CLI; see the official [Desktop shared configuration](https://code.claude.com/docs/en/desktop#shared-configuration).
+For local sessions in the Desktop app's **Code** tab, use the [native current-session tools](claude-desktop.md). No SDK environment is required. The Desktop app ships its own Claude Code runtime, so the terminal's `claude --version` does not establish Desktop capabilities. Check the tools exposed in the actual session. Desktop local sessions load `~/.claude/skills/` and share hook settings with the CLI; see the official [Desktop shared configuration](https://code.claude.com/docs/en/desktop#shared-configuration).
 
 For automatic naming, configure the [SessionStart hook below](#claude-sessionstart-hook). Installing the Codex plugin does not install a Claude Skill or register a Claude hook. A terminal SDK rename does not update the Desktop sidebar reliably; do not use it as a fallback for missing Desktop tools.
 

@@ -1,4 +1,4 @@
-"""Run with python3 test_session_start.py. No live Codex tools are invoked."""
+"""Run with python3 test_session_start.py. No live client tools are invoked."""
 
 import json
 import os
@@ -103,7 +103,7 @@ class SessionStartTest(unittest.TestCase):
         context = json.loads(self.run_hook(json.dumps(event), "--client", "claude-code").stdout)["hookSpecificOutput"]["additionalContext"]
         for phrase in ("CLAUDE STARTUP/root", f"first read {SCRIPT.parent.parent / 'SKILL.md'}",
                        '"session_id": "abc123"', "official SDK bridge", "rename once",
-                       "inspect custom_title to verify", "If the Skill cannot be read, skip naming",
+                       "read back to verify", "If the Skill cannot be read, skip naming",
                        "Root agent only", "subagents must ignore this reminder"):
             self.assertIn(phrase, context)
         self.assertNotIn("set_thread_title", context)
@@ -112,8 +112,10 @@ class SessionStartTest(unittest.TestCase):
             event["source"] = source
             result = self.run_hook(json.dumps(event), "--client", "claude-code")
             context = json.loads(result.stdout)["hookSpecificOutput"]["additionalContext"]
-            self.assertIn("CLAUDE", context)
-            self.assertIn('"source": "' + source + '"', context)
+            identity_text = context.split("Trusted Claude Code runtime identity: ", 1)[1]
+            identity, _ = json.JSONDecoder().raw_decode(identity_text)
+            self.assertEqual(identity, {"session_id": event["session_id"],
+                                        "directory": event["cwd"], "source": source})
             self.assertNotIn("set_thread_title", context)
             if source != "startup":
                 self.assertIn("does not authorize automatic naming", context)

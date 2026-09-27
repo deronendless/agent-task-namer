@@ -2,7 +2,7 @@
 
 [English](README.md)
 
-为 Codex 任务自动添加类型、创建日期和主题，让侧栏里的任务更容易找到。
+为 Codex 和 Claude 桌面端的本地 Code 会话自动添加类型、创建日期和主题，让侧栏里的任务更容易找到。
 
 ![任务标题命名前后对比：统一显示类型、创建日期和主题](assets/readme/before-after-zh.png)
 
@@ -65,7 +65,8 @@ $agent-task-namer 检查一下为什么没有自动命名。
 
 - **预览或整理 Codex 任务：**让 `$agent-task-namer` “预览新标题，先不要执行改名”，或“整理当前项目的所有任务命名”。[批量改名与恢复](skills/agent-task-namer/references/batch.md)。
 - **切换语言：**直接说“保留格式，把当前任务标题改成英文”。
-- **Claude Code 本地 CLI（实验性）：**将 `skills/agent-task-namer/` 复制到 `~/.claude/skills/agent-task-namer/`，[安装可选 SDK](skills/agent-task-namer/references/automatic.md#claude-code-local-cli-setup) 后使用 `/agent-task-namer 按规范重命名当前会话。` 完整流程仍待验证，暂不支持批量整理与恢复。
+- **Claude 桌面端的本地 Code 会话：**将 `skills/agent-task-namer/` 复制到 `~/.claude/skills/agent-task-namer/`，使用 `/agent-task-namer 按规范重命名当前会话。`，也可以让它启用新会话自动命名。需要客户端提供当前会话原生工具；[桌面端配置](skills/agent-task-namer/references/automatic.md#desktop-code)无需 SDK。
+- **Claude Code 本地 CLI（实验性）：**安装同一份 Skill，并[配置可选 SDK](skills/agent-task-namer/references/automatic.md#claude-code-local-cli-setup)。CLI 完整流程仍待验证。Claude 暂不支持批量改名与恢复。
 - **其他 Agent：**加载 [Skill](skills/agent-task-namer/SKILL.md) 后生成标题建议，不提供直接改名。
 
 ## 验证

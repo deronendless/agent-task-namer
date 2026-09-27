@@ -59,9 +59,17 @@ Unmanaged hooks must be reviewed and trusted by the user through the desktop app
 
 To disable automatic naming, disable this hook in the app's Hooks settings or CLI `/hooks`, or remove only its configuration entry. The skill remains available on demand. No scheduled tasks, background services, or direct changes to the Codex database are needed.
 
-## Claude Code local CLI setup
+## Claude Code local installation
 
 Install the repository's `skills/agent-task-namer/` directory at `~/.claude/skills/agent-task-namer/`. The installed directory contains `SKILL.md` and `scripts/` directly, without an extra nested `skills/` directory. Existing standalone copies retain their script paths; symlinks into the old repository root must point to the new skill directory. Preserve any existing files and compare them before updating; do not overwrite external changes. Use `agent-task-namer` for the repository and skill directory, and `/agent-task-namer` for Claude invocation.
+
+### Desktop Code
+
+For local sessions in the Desktop app's **Code** tab, use the [native current-session tools](clients.md#claude-desktop-code-local-sessions). No SDK environment is required. The Desktop app ships its own Claude Code runtime, so the terminal's `claude --version` does not establish Desktop capabilities. Check the tools exposed in the actual session. Desktop local sessions load `~/.claude/skills/` and share hook settings with the CLI; see the official [Desktop shared configuration](https://code.claude.com/docs/en/desktop#shared-configuration).
+
+For automatic naming, configure the [SessionStart hook below](#claude-sessionstart-hook). Installing the Codex plugin does not install a Claude Skill or register a Claude hook. A terminal SDK rename does not update the Desktop sidebar reliably; do not use it as a fallback for missing Desktop tools.
+
+## Claude Code local CLI setup
 
 Only the Claude bridge needs the optional official SDK. Use a Python 3.10+ interpreter to create a virtual environment outside the skill and repository:
 
@@ -74,7 +82,9 @@ Replace `python3` with the path to a Python 3.10+ interpreter if needed. The req
 
 Check `claude --version` and the documented capabilities of the actual executable. If required skill identity substitution or session metadata is missing, follow the user's upgrade preference and the [official setup instructions](https://code.claude.com/docs/en/setup) for their existing installation channel. Test stable versions before changing claims of support; do not guess a minimum version from the SDK version.
 
-First use a dedicated, reviewed test project and pass a settings file with `claude --settings /absolute/path/test-settings.json`. Review the workspace through Claude's normal trust flow. After testing, merge only the entry below into `~/.claude/settings.json`, preserving other settings and hooks. Replace the interpreter and script paths with verified absolute paths and quote paths with spaces:
+## Claude SessionStart hook
+
+First use a dedicated test project: put the hook in that project's `.claude/settings.local.json`, or pass a settings file to the CLI with `claude --settings /absolute/path/test-settings.json`. Review the workspace through Claude's normal trust flow. After testing, merge only the entry below into `~/.claude/settings.json`, preserving other settings and hooks. Remove the same naming-hook entry from the test project's settings, or stop passing the temporary CLI settings file, so both sources do not run it. Replace the interpreter and script paths with verified absolute paths and quote paths with spaces:
 
 ```json
 {
@@ -91,9 +101,9 @@ First use a dedicated, reviewed test project and pass a settings file with `clau
 }
 ```
 
-Claude workspace trust and Codex hook trust are separate. Do not copy Codex's `additionalContextLimit` or edit trust records. Do not use noninteractive execution to bypass a pending trust decision. Saving configuration is not proof the reminder ran. The hook supplies the current session ID and directory; the main agent must still inspect that session through the bridge before naming. Existing custom titles are preserved in automatic mode.
+Claude workspace trust and Codex hook trust are separate. Do not copy Codex's `additionalContextLimit` or edit trust records. Do not use noninteractive execution to bypass a pending trust decision. Saving configuration is not proof the reminder ran. The hook supplies the runtime session ID and directory; the main agent must inspect the current session through the appropriate client workflow before naming. Desktop uses its native `self` selector and Desktop metadata, while the CLI bridge uses the trusted runtime UUID. Both preserve known user-chosen titles. The CLI bridge additionally preserves any non-null SDK `custom_title`: that field can contain a user-set or AI-generated title, so it cannot establish origin and may cause an otherwise new session to be skipped. Do not remove that guard to force activation.
 
-If the SDK is missing, the ID is unexpanded or inconsistent, or the session is unreadable, use suggestion mode. A `conflict` requires a fresh read and reassessment; an unverified write requires a read before any targeted retry. Never fix these conditions by editing private session files. Claude Desktop, cloud sessions, and Claude batch/restore are outside this version's scope.
+If the selected client's required tools or CLI SDK are missing, its identity is inconsistent, or the session is unreadable, use suggestion mode. A `conflict` requires a fresh read and reassessment; an unverified write requires a read before any targeted retry. Never fix these conditions by editing private session files. Desktop Chat, Cowork, cloud sessions, and Claude batch/restore are outside this version's scope.
 
 To disable, remove only this script's Claude hook entry. Keep unrelated hooks, the optional on-demand skill, user sessions, and Codex batch records.
 

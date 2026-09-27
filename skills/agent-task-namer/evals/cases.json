@@ -755,6 +755,7 @@
       "id": "claude-new",
       "input": {
         "client": "claude-code",
+        "host_surface": "local CLI",
         "role": "root",
         "trusted_identity": true,
         "tools_available": true,
@@ -785,6 +786,7 @@
       "id": "claude-custom",
       "input": {
         "client": "claude-code",
+        "host_surface": "local CLI",
         "role": "root",
         "trusted_identity": true,
         "tools_available": true,
@@ -813,6 +815,7 @@
       "id": "claude-fork",
       "input": {
         "client": "claude-code",
+        "host_surface": "local CLI",
         "role": "root",
         "trusted_identity": true,
         "tools_available": true,

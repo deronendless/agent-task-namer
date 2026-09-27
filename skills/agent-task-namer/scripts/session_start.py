@@ -50,16 +50,18 @@ def hook_output(event, client="codex"):
             context = (
                 f"CLAUDE STARTUP/root: Before replying to the first substantive request, first read {skill} "
                 "and run its Claude Code current-session workflow. "
-                f"Trusted session identity: {identity}. "
+                f"Trusted Claude Code runtime identity: {identity}. "
                 "This trusted startup Hook authorizes one automatic rename if the Skill guards pass: "
-                "inspect with the official SDK bridge; rename once; inspect custom_title to verify. "
-                "Preserve an existing custom title. If the bridge or reliable creation time is unavailable, "
-                "offer a suggestion only. If the Skill cannot be read, skip naming. Root agent only; "
+                "use official current-session tools in Desktop Code, or the official SDK bridge in the local CLI. "
+                "The runtime UUID is not a Desktop session ID; use native self there. "
+                "Follow the client's title protections; rename once and read back to verify. "
+                "If required operations or creation time are unavailable, offer a suggestion only. "
+                "If the Skill cannot be read, skip naming. Root agent only; "
                 "subagents must ignore this reminder. Never rename other sessions; then complete the user's request."
             )
         else:
             context = (
-                f"CLAUDE LIFECYCLE/root: Trusted session identity: {identity}. "
+                f"CLAUDE LIFECYCLE/root: Trusted Claude Code runtime identity: {identity}. "
                 "This event does not authorize automatic naming. Preserve the current title and continue "
                 f"the user's request. Read {skill} only if the user explicitly asks to name or diagnose "
                 "this session, then follow its Claude Code workflow. Never rename other sessions."

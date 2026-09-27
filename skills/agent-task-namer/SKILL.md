@@ -9,14 +9,14 @@ Name tasks as `emoji Type | YYMMDD | Topic`, using an ASCII pipe with one space 
 
 ## Choose a mode
 
-- **Current task:** Follow the workflow below for an explicit naming request or a trusted local `SessionStart` reminder. Read [references/clients.md](references/clients.md) before client operations. Codex supports current-task naming; Claude Code supports only its current session through the optional official SDK bridge and remains experimental. Other hosts offer suggestions only.
+- **Current task:** Follow the workflow below for an explicit naming request or a trusted local `SessionStart` reminder. Read [references/clients.md](references/clients.md) before client operations. Codex supports current-task naming. Local Claude Desktop Code uses official current-session tools; Claude Code CLI uses the experimental optional SDK bridge. Both Claude paths cover only the current session. Other hosts offer suggestions only.
 - **Diagnosis:** For “检查一下为什么没有自动命名” or equivalent, read [references/troubleshooting.md](references/troubleshooting.md). Diagnosis takes precedence over automatic naming. Inspect and explain; diagnosis alone authorizes neither renaming nor installation/configuration changes. An accompanying explicit repair or migration request authorizes its stated scope.
 - **Batch or restoration (Codex only):** Read [references/batch.md](references/batch.md) when the user explicitly requests organizing a project/task set or restoring a recorded batch. Current-task authorization never extends to other tasks.
 - **Discussion or preview:** Suggest titles without writes. If execution is already authorized, perform the necessary checks and proceed without asking again.
 
 For setup or changes to automatic triggering, read [references/automatic.md](references/automatic.md). Loading or implicitly matching this skill does not install a hook, provide missing tools, or authorize automations. For maintenance or release evaluation only, read [references/validation.md](references/validation.md).
 
-Claude native identity hints: `${CLAUDE_SESSION_ID}` and `${CLAUDE_PROJECT_DIR}`. Use only host-expanded values in a confirmed Claude Code runtime; see the client reference for validation.
+Claude runtime identity hints: `${CLAUDE_SESSION_ID}` and `${CLAUDE_PROJECT_DIR}`. Use only host-expanded values in a confirmed Claude Code runtime; see the client reference for validation. Desktop has a separate session identity: use its official `self` selector, never substitute the runtime UUID as the Desktop ID.
 
 ## Automatic naming eligibility
 

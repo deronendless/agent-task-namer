@@ -4,7 +4,7 @@ Read this for maintenance or release, not routine naming. Keep three kinds of ev
 
 ## Structured current-task evaluation
 
-[cases.json](../evals/cases.json) is the source of truth for the structured inputs and expectations. It covers first-turn Chinese/English/Traditional Chinese naming, quoted language instructions, user-chosen and compliant titles, lifecycle preservation, missing dates, exact names, preview/diagnosis, file-only and broader no-change requests, subagents, unavailable tools, readback failures, concurrent edits, explicit normalization, and Claude startup/custom-title/fork behavior.
+[cases.json](../evals/cases.json) is the source of truth for the structured inputs and expectations. It covers first-turn Chinese/English/Traditional Chinese naming, quoted language instructions, user-chosen and compliant titles, lifecycle preservation, missing dates, exact names, preview/diagnosis, file-only and broader no-change requests, subagents, unavailable tools, readback failures, concurrent edits, explicit normalization, and Claude Code CLI startup/custom-title/fork behavior.
 
 From the repository root:
 
@@ -70,6 +70,16 @@ Use [batch.md](batch.md) as the execution protocol, including recording before w
 | User requests updating the Skill, with no task-set naming authorization | No renaming of other tasks. |
 | Claude user asks to restore a Codex batch record | Explain current-session-only scope; do not access or restore the record. |
 
+### Claude client routing
+
+| Scenario | Expected behavior |
+|---|---|
+| Confirmed local CLI, trusted startup and first request; SDK returns a non-null `custom_title` matching the initial topic, with no title-origin field; user asks why naming was skipped | Explain that the field may contain a manual or AI-generated title and the automatic guard preserves it. Do not infer a manual rename, bypass the guard, or rename during diagnosis. |
+| A dedicated Desktop Code test explicitly requested naming; SDK reports the requested `custom_title`, but the sidebar/header still show the previous title | Report SDK metadata success and Desktop display failure separately. Do not claim Desktop support, repeat a successful SDK write to repair the UI, or edit private state. |
+| Local Desktop Code with native current-session read/write tools; trusted startup and first request “解释 HTTP 缓存的 ETag”; no user-chosen title or prior history; native `createdAt=2026-09-26T16:00:01Z`, unchanged title before writing; SDK also available with a non-null `custom_title` and a different creation day | Use native `self` for reads/write, form a Chinese title with `260927`, omit App-managed `_consent`, and verify the same native identity/title. Do not call the SDK, substitute the runtime UUID, or claim unobserved UI checks. |
+| Same Desktop capabilities, but the user says “这个会话的标题保留为课堂笔记，解释 ETag 即可” and the native title is “课堂笔记” | Preserve the chosen title; no write, SDK fallback, or consent argument. |
+| Desktop Code; user requests exact title “验收”; native read exists and SDK is available, but native current-session write is absent | Offer “验收” as an unapplied candidate. Do not fall back to SDK writes or another session. |
+
 ### Diagnosis and migration
 
 Use [troubleshooting.md](troubleshooting.md), supplying snapshots rather than live configuration.
@@ -84,4 +94,6 @@ Use a dedicated new local Codex task after normal installation and Hook trust. V
 
 Record these stages separately: package checks; installed copy and visible trust; actual reminder dispatch; authorized write and matching readback; continuation/disable behavior. A passing existing installation does not verify a newly edited checkout. Do not update publication claims or point the marketplace at an unreleased tag based on offline results alone.
 
-For Claude, use a dedicated project/session, normal workspace trust, and a session-scoped Hook first. Check explicit Chinese/English naming, first-turn naming, custom-title preservation, resume/fork, and readback after reopening. Keep its live results separate and retain the experimental label until verified. A documented bridge and mocked SDK tests do not establish live Claude support.
+For Claude, use a dedicated project/session, normal workspace trust, and a session-scoped Hook first. Check explicit Chinese/English naming, first-turn naming, custom-title preservation, resume/fork, and readback after reopening. After testing a global Hook, remove duplicate project configuration and verify a new session. Keep Desktop Code and CLI results separate; retain the CLI bridge's experimental label until its own verification is completed. A documented bridge and mocked SDK tests do not establish live support.
+
+Desktop checks must use native current-session tools and also verify the visible sidebar/header, ordinary follow-up, and reopening. Record SDK metadata success separately from the Desktop display: SDK readback alone does not verify the UI. Navigating away and reopening does not establish application-restart or resume behavior. Keep real session IDs, environment details, and test results in private records outside the repository.

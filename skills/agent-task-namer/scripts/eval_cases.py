@@ -25,8 +25,10 @@ reason. action is rename (verified write), preserve, candidate (suggestion only)
 preview, diagnose, conflict (before write), or unverified (after write). title is
 the proposed title for writes/suggestions, preserved title for preserve, otherwise
 null. verified is true only for a matching post-write read. trace is an ordered
-array of simulated operations: read, write, readback. For Claude these represent
-bridge inspection, its SDK write, and its internal readback. For Codex they represent
+array of simulated operations: read, write, readback. For Claude Code CLI these represent
+bridge inspection, its SDK write, and its internal readback. For Desktop Code they
+represent native get_session, set_session_title, and get_session using self.
+For Codex they represent
 read_thread, set_thread_title targeting this task with threadId omitted, and
 read_thread. Record only operations you would perform, not available snapshots.
 Do not retry when all further reads are unavailable. Explain language, date,

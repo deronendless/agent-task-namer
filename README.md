@@ -2,7 +2,7 @@
 
 [简体中文](README.zh-CN.md)
 
-Automatically add a type, creation date, and topic to Codex task titles, so you can find them in the sidebar.
+Automatically add a type, creation date, and topic to task titles in Codex and Claude Desktop's local Code sessions, so you can find them in the sidebar.
 
 ![Task titles before and after naming with type, creation date, and topic](assets/readme/before-after-en.png)
 
@@ -65,7 +65,8 @@ The plugin page offers three starters: **name this task**, **preview project tit
 
 - **Preview or organize Codex tasks:** ask `$agent-task-namer` to “Preview new titles without applying them” or “Organize the titles of all tasks in this project.” [Batch rename and restore](skills/agent-task-namer/references/batch.md).
 - **Change the language:** ask “Translate this task's title into English, keeping the format.”
-- **Claude Code local CLI (experimental):** copy `skills/agent-task-namer/` to `~/.claude/skills/agent-task-namer/`, [set up the optional SDK](skills/agent-task-namer/references/automatic.md#claude-code-local-cli-setup), then use `/agent-task-namer Rename this session using the standard format.` End-to-end validation is pending; batch and restore are not included.
+- **Claude Desktop, local Code sessions:** copy `skills/agent-task-namer/` to `~/.claude/skills/agent-task-namer/`, then use `/agent-task-namer Rename this session using the standard format.` Ask it to enable automatic naming for new sessions. Requires native current-session tools; the [Desktop setup](skills/agent-task-namer/references/automatic.md#desktop-code) needs no SDK.
+- **Claude Code local CLI (experimental):** install the same Skill and [set up the optional SDK](skills/agent-task-namer/references/automatic.md#claude-code-local-cli-setup). CLI end-to-end validation is pending. Claude batch rename and restore are not included.
 - **Other agents:** load the [Skill](skills/agent-task-namer/SKILL.md) and ask for a title suggestion. Direct renaming is not included.
 
 ## Validation

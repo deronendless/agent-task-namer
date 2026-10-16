@@ -1,6 +1,6 @@
 {
   "name": "agent-task-namer",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Automatic titles for local Claude Code sessions, with a workflow for diagnosing naming issues.",
   "author": {
     "name": "deronendless",

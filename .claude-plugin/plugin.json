@@ -1,0 +1,21 @@
+{
+  "name": "agent-task-namer",
+  "version": "0.1.6",
+  "description": "Automatic titles for local Claude Code sessions, with a workflow for diagnosing naming issues.",
+  "author": {
+    "name": "deronendless",
+    "url": "https://github.com/deronendless"
+  },
+  "homepage": "https://github.com/deronendless/agent-task-namer",
+  "repository": "https://github.com/deronendless/agent-task-namer",
+  "license": "MIT",
+  "keywords": [
+    "task-naming",
+    "session-titles",
+    "claude-code",
+    "productivity",
+    "任务命名"
+  ],
+  "skills": "./skills/",
+  "hooks": "./hooks/claude-code.json"
+}

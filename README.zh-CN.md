@@ -59,14 +59,37 @@ $agent-task-namer 检查一下为什么没有自动命名。
 
 [故障排查](skills/agent-task-namer/references/troubleshooting.md)列出了检查项和对应处理方式。
 
+## 在 Claude Code 中开始使用
+
+适用于 **Claude 桌面端 Code 标签页的本地会话**，它提供当前会话的原生工具。自动命名还需要 **Python 3**。同一个插件也能在终端 CLI 中加载，但 CLI 改名仍为实验性。
+
+将这个公开 GitHub 仓库作为 Claude Code 插件 Marketplace 添加并安装插件。在 Claude Code 终端会话中运行：
+
+```text
+/plugin marketplace add deronendless/agent-task-namer
+/plugin install agent-task-namer@agent-task-namer
+```
+
+详情页会列出插件包含的内容：一个 Skill 和一个 `SessionStart` Hook。审阅后选择安装范围。内置 Hook 不需要在 `settings.json` 里添加任何条目，从下一个新会话开始生效。终端和桌面端本地 Code 会话共用用户设置，在其中一处按用户范围安装后，另一处也能使用。
+
+如果当前版本不支持仓库 Marketplace，可以改装独立 Skill：把 `skills/agent-task-namer/` 复制到 `~/.claude/skills/agent-task-namer/`，再让 `/agent-task-namer` 启用新会话自动命名。不要同时使用插件和独立 Skill 的命名 Hook，否则每个新会话会收到两次提醒；见[配置与迁移说明](skills/agent-task-namer/references/automatic.md#claude-code-plugin-installation)。
+
+安装后，先试着给当前会话命名。插件内的 Skill 带有插件前缀：
+
+```text
+/agent-task-namer:agent-task-namer 按规范重命名当前会话。
+```
+
+侧栏标题应变成上方示例中的格式。新会话在首次实质请求明确后会自动命名。
+
 ## 更多用法
 
 插件页面提供三个入口：**命名当前任务**、**预览项目标题**和**诊断自动命名**。预览不会执行改名。
 
 - **预览或整理 Codex 任务：**让 `$agent-task-namer` “预览新标题，先不要执行改名”，或“整理当前项目的所有任务命名”。[批量改名与恢复](skills/agent-task-namer/references/batch.md)。
 - **切换语言：**直接说“保留格式，把当前任务标题改成英文”。
-- **Claude 桌面端的本地 Code 会话：**将 `skills/agent-task-namer/` 复制到 `~/.claude/skills/agent-task-namer/`，使用 `/agent-task-namer 按规范重命名当前会话。`，也可以让它启用新会话自动命名。需要客户端提供当前会话原生工具；[桌面端配置](skills/agent-task-namer/references/automatic.md#desktop-code)无需 SDK。
-- **Claude Code 本地 CLI（实验性）：**安装同一份 Skill，并[配置可选 SDK](skills/agent-task-namer/references/automatic.md#claude-code-local-cli-setup)。CLI 完整流程仍待验证。Claude 暂不支持批量改名与恢复。
+- **Claude 桌面端的本地 Code 会话：**安装上面的插件或独立 Skill 后，直接要求改名或诊断。需要客户端提供当前会话原生工具；[桌面端配置](skills/agent-task-namer/references/automatic.md#desktop-code)无需 SDK。
+- **Claude Code 本地 CLI（实验性）：**安装同一个插件或 Skill，并[配置可选 SDK](skills/agent-task-namer/references/automatic.md#claude-code-local-cli-setup)。CLI 完整流程仍待验证。Claude 暂不支持批量改名与恢复。
 - **其他 Agent：**加载 [Skill](skills/agent-task-namer/SKILL.md) 后生成标题建议，不提供直接改名。
 
 ## 验证
@@ -79,7 +102,7 @@ python3 -m unittest discover -s hooks
 python3 skills/agent-task-namer/scripts/eval_cases.py check
 ```
 
-结构化案例覆盖命名条件、语言、日期和回读失败。`check` 仅检查案例结构；独立盲测与真实客户端检查见[行为评测说明](skills/agent-task-namer/references/validation.md)。
+结构化案例覆盖命名条件、语言、日期和回读失败。Hook 测试还会检查两个插件包，包括 Claude Code 插件引用的每个路径。`check` 仅检查案例结构；独立盲测与真实客户端检查见[行为评测说明](skills/agent-task-namer/references/validation.md)。
 
 ---
 

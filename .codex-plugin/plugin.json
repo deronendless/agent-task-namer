@@ -10,6 +10,7 @@
   "repository": "https://github.com/deronendless/agent-task-namer",
   "license": "MIT",
   "skills": "./skills/",
+  "hooks": "./hooks/codex.json",
   "interface": {
     "displayName": "Agent Task Namer",
     "shortDescription": "Find Codex tasks by type, date, and topic",

@@ -1,0 +1,17 @@
+{
+  "description": "Remind the root agent to name a new Claude Code session once its first request is clear.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "^(startup|resume|clear|compact|fork)$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/skills/agent-task-namer/scripts/session_start.py\" --client claude-code",
+            "timeout": 3
+          }
+        ]
+      }
+    ]
+  }
+}

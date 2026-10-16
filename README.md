@@ -59,14 +59,37 @@ $agent-task-namer Check why automatic task naming is not working.
 
 See [troubleshooting](skills/agent-task-namer/references/troubleshooting.md) for checks and next steps.
 
+## Get started in Claude Code
+
+For **local sessions in Claude Desktop's Code tab**, which expose native current-session tools. Automatic naming also requires **Python 3**. The same plugin loads in the terminal CLI, where renaming remains experimental.
+
+Add this public GitHub repository as a Claude Code plugin marketplace and install the plugin. In a Claude Code terminal session, run:
+
+```text
+/plugin marketplace add deronendless/agent-task-namer
+/plugin install agent-task-namer@agent-task-namer
+```
+
+The details pane lists what the plugin adds: one skill and one `SessionStart` hook. Review it, then choose a scope. The bundled hook needs no entry in `settings.json` and runs from the next session start. The terminal and Desktop's local Code sessions share user settings, so a plugin installed for your user in one is available in the other.
+
+If repository marketplaces are unavailable, install the standalone Skill instead: copy `skills/agent-task-namer/` to `~/.claude/skills/agent-task-namer/`, then ask `/agent-task-namer` to enable automatic naming for new sessions. Do not combine the plugin with a standalone naming hook, or every new session gets two reminders; see [setup and migration](skills/agent-task-namer/references/automatic.md#claude-code-plugin-installation).
+
+After installation, try naming the current session. Plugin skills carry the plugin prefix:
+
+```text
+/agent-task-namer:agent-task-namer Rename this session using the standard format.
+```
+
+The sidebar title should change to the format shown above. New sessions are named automatically once their first substantive request is clear.
+
 ## More ways to use it
 
 The plugin page offers three starters: **name this task**, **preview project titles**, and **diagnose automatic naming**. Preview does not apply changes.
 
 - **Preview or organize Codex tasks:** ask `$agent-task-namer` to “Preview new titles without applying them” or “Organize the titles of all tasks in this project.” [Batch rename and restore](skills/agent-task-namer/references/batch.md).
 - **Change the language:** ask “Translate this task's title into English, keeping the format.”
-- **Claude Desktop, local Code sessions:** copy `skills/agent-task-namer/` to `~/.claude/skills/agent-task-namer/`, then use `/agent-task-namer Rename this session using the standard format.` Ask it to enable automatic naming for new sessions. Requires native current-session tools; the [Desktop setup](skills/agent-task-namer/references/automatic.md#desktop-code) needs no SDK.
-- **Claude Code local CLI (experimental):** install the same Skill and [set up the optional SDK](skills/agent-task-namer/references/automatic.md#claude-code-local-cli-setup). CLI end-to-end validation is pending. Claude batch rename and restore are not included.
+- **Claude Desktop, local Code sessions:** install the plugin above, or the standalone Skill, and ask for a rename or a diagnosis. Requires native current-session tools; the [Desktop setup](skills/agent-task-namer/references/automatic.md#desktop-code) needs no SDK.
+- **Claude Code local CLI (experimental):** install the same plugin or Skill and [set up the optional SDK](skills/agent-task-namer/references/automatic.md#claude-code-local-cli-setup). CLI end-to-end validation is pending. Claude batch rename and restore are not included.
 - **Other agents:** load the [Skill](skills/agent-task-namer/SKILL.md) and ask for a title suggestion. Direct renaming is not included.
 
 ## Validation
@@ -79,7 +102,7 @@ python3 -m unittest discover -s hooks
 python3 skills/agent-task-namer/scripts/eval_cases.py check
 ```
 
-The structured cases cover naming eligibility, languages, dates, and readback failures. `check` validates case structure only. See [behavior evaluation](skills/agent-task-namer/references/validation.md) for blind simulated traces and separate live-client checks.
+The structured cases cover naming eligibility, languages, dates, and readback failures. The hook tests also check both plugin packages, including every path the Claude Code plugin references. `check` validates case structure only. See [behavior evaluation](skills/agent-task-namer/references/validation.md) for blind simulated traces and separate live-client checks.
 
 ---
 

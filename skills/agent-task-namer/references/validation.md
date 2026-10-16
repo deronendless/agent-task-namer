@@ -14,7 +14,7 @@ python3 -m unittest discover -s hooks
 python3 skills/agent-task-namer/scripts/eval_cases.py check
 ```
 
-`check` validates the fixture structure, not Agent decisions. SDK tests use mocks. Package tests relocate the plugin, check its release pin and resources, and run the standalone skill without plugin files. They do not install or trust a plugin.
+`check` validates the fixture structure, not Agent decisions. SDK tests use mocks. Package tests relocate the Codex plugin, check its release pin and resources, resolve every path the Claude Code plugin manifests and bundled hook reference, run that hook from a dereferenced copy, and run the standalone skill without plugin files. They do not install or trust a plugin.
 
 ### Blind simulation
 
@@ -100,6 +100,6 @@ Use a dedicated new local Codex task after normal installation and Hook trust. V
 
 Record these stages separately: package checks; installed copy and visible trust; actual reminder dispatch; authorized write and matching readback; continuation/disable behavior. A passing existing installation does not verify a newly edited checkout. Do not update publication claims or point the marketplace at an unreleased tag based on offline results alone.
 
-For Claude, use a dedicated project/session, normal workspace trust, and a session-scoped Hook first. Check explicit Chinese/English naming, first-turn naming, custom-title preservation, resume/fork, and readback after reopening. After testing a global Hook, remove duplicate project configuration and verify a new session. Keep Desktop Code and CLI results separate; retain the CLI bridge's experimental label until its own verification is completed. A documented bridge and mocked SDK tests do not establish live support.
+For Claude, use a dedicated project/session, normal workspace trust, and a session-scoped Hook first. For the plugin path, add the GitHub marketplace in a terminal session, confirm the details pane lists one skill and one `SessionStart` hook, install at user scope, and check that a new Desktop Code session receives exactly one reminder with no standalone hook left behind. Check explicit Chinese/English naming, first-turn naming, custom-title preservation, resume/fork, and readback after reopening. After testing a global Hook, remove duplicate project configuration and verify a new session. Keep Desktop Code and CLI results separate; retain the CLI bridge's experimental label until its own verification is completed. A documented bridge and mocked SDK tests do not establish live support.
 
 Desktop checks must use native current-session tools and also verify the visible sidebar/header, ordinary follow-up, and reopening. Record SDK metadata success separately from the Desktop display: SDK readback alone does not verify the UI. Navigating away and reopening does not establish application-restart or resume behavior. Keep real session IDs, environment details, and test results in private records outside the repository.

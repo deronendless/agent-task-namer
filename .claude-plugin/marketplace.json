@@ -1,0 +1,24 @@
+{
+  "name": "agent-task-namer",
+  "metadata": {
+    "description": "Type, creation date, and topic for Codex task and Claude Code session titles."
+  },
+  "owner": {
+    "name": "deronendless",
+    "url": "https://github.com/deronendless"
+  },
+  "plugins": [
+    {
+      "name": "agent-task-namer",
+      "source": "./",
+      "description": "Name local Claude Code sessions by type, creation date, and topic, with a bundled SessionStart hook for automatic naming.",
+      "category": "productivity",
+      "tags": [
+        "task-naming",
+        "session-titles",
+        "claude-code",
+        "productivity"
+      ]
+    }
+  ]
+}

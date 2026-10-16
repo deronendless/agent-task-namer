@@ -86,7 +86,13 @@ class PluginTest(unittest.TestCase):
         self.assertEqual(plugin["category"], manifest["interface"]["category"])
 
     def test_packaged_hook_runs_from_another_working_directory(self):
-        configuration = json.loads((self.root / "hooks/hooks.json").read_text(encoding="utf-8"))
+        manifest = json.loads((self.root / ".codex-plugin/plugin.json").read_text(encoding="utf-8"))
+        self.assertTrue(manifest["hooks"].startswith("./"))
+        hook_file = (self.root / manifest["hooks"]).resolve()
+        self.assertIn(self.root, hook_file.parents)
+        self.assertNotEqual(hook_file.name, "hooks.json", "the default name is also discovered by Claude Code")
+        self.assertFalse((self.root / "hooks/hooks.json").exists())
+        configuration = json.loads(hook_file.read_text(encoding="utf-8"))
         commands = [
             hook["command"]
             for group in configuration["hooks"]["SessionStart"]

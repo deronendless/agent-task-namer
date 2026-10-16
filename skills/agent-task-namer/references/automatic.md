@@ -4,7 +4,7 @@ Read this only when the user requests installing, enabling, changing, or removin
 
 ## How it works
 
-Installing the skill alone provides explicit invocation and matching by its description. For Codex and Claude Code's `SessionStart` event, `scripts/session_start.py` emits `hookSpecificOutput.additionalContext` to remind the main agent to read this skill. It does not call a model, read conversation transcripts, rename tasks, or save state. No arguments retain the original Codex behavior; `--client claude-code` selects Claude Code. Unknown clients fail without emitting a reminder. Subagent events and identities are skipped; a custom main-agent `agent_type` alone is not a subagent identity.
+Installing the skill alone provides explicit invocation and matching by its description. For Codex and Claude Code's `SessionStart` event, bundled with both plugins or configured by hand, `scripts/session_start.py` emits `hookSpecificOutput.additionalContext` to remind the main agent to read this skill. It does not call a model, read conversation transcripts, rename tasks, or save state. No arguments retain the original Codex behavior; `--client claude-code` selects Claude Code. Unknown clients fail without emitting a reminder. Subagent events and identities are skipped; a custom main-agent `agent_type` alone is not a subagent identity.
 
 The Hook carries the trusted identity, lifecycle event, and scope of the reminder. Naming eligibility is maintained in [the main Skill](../SKILL.md#automatic-naming-eligibility); the Hook does not decide newness, language, date, user-title protection, or no-change scope. Lifecycle events are not creation timestamps. The skill selects the [client workflow](clients.md).
 
@@ -19,7 +19,7 @@ codex plugin add agent-task-namer@agent-task-namer
 
 Restart Codex, then review and trust the bundled Hook from the plugin detail page. This repository marketplace is separate from publication in OpenAI's universal Plugins Directory.
 
-Codex discovers the enabled plugin's bundled hook automatically. Users do not need to add it to their own `hooks.json` or `config.toml`. The local host must provide `python3` on `PATH`; the plugin does not bundle a Python runtime. Plugin commands resolve packaged files through `PLUGIN_ROOT`, which Codex supplies for the installed plugin; do not replace it with an author's machine-specific path.
+Codex discovers the enabled plugin's bundled hook automatically. `.codex-plugin/plugin.json` declares it explicitly as `./hooks/codex.json` instead of relying on the default `hooks/hooks.json` location, because Claude Code also loads that default file from the same repository. Upgrading an installed plugin from a release that still used `hooks/hooks.json` changes the hook definition's location, so Codex may ask the user to review and trust the hook again. Users do not need to add it to their own `hooks.json` or `config.toml`. The local host must provide `python3` on `PATH`; the plugin does not bundle a Python runtime. Plugin commands resolve packaged files through `PLUGIN_ROOT`, which Codex supplies for the installed plugin; do not replace it with an author's machine-specific path.
 
 Installation does not grant hook trust. In the desktop app's plugin detail page, review the hook and choose **Trust all** to trust this plugin's pending hooks in one operation. **Review** opens the hook details. The CLI equivalent is `/hooks`. After the current definition is trusted and enabled, subsequent new tasks require no per-session setup. A changed definition may require review again. See the official [plugin hook trust rules](https://developers.openai.com/plugins/build/plugins#bundled-mcp-servers-and-lifecycle-hooks).
 
@@ -59,15 +59,34 @@ Unmanaged hooks must be reviewed and trusted by the user through the desktop app
 
 To disable automatic naming, disable this hook in the app's Hooks settings or CLI `/hooks`, or remove only its configuration entry. The skill remains available on demand. No scheduled tasks, background services, or direct changes to the Codex database are needed.
 
+## Claude Code plugin installation
+
+This public GitHub repository also includes `.claude-plugin/marketplace.json`, so it can be added to Claude Code as a plugin marketplace. In a Claude Code terminal session, run:
+
+```text
+/plugin marketplace add deronendless/agent-task-namer
+/plugin install agent-task-namer@agent-task-namer
+```
+
+The install command opens the plugin's details, which list one skill and one `SessionStart` hook. Review them, then choose the user, project, or local scope. The marketplace entry publishes the repository root as the plugin, so `.claude-plugin/plugin.json` sits beside the marketplace file and names `./skills/` and `./hooks/claude-code.json` explicitly; Claude Code copies the whole root into its plugin cache during installation. The same shared `scripts/session_start.py` runs with `--client claude-code`.
+
+Claude Code loads the enabled plugin's bundled `hooks/claude-code.json` automatically. Users do not add it to `settings.json`. The Codex plugin's hook is `hooks/codex.json`, declared by `.codex-plugin/plugin.json`; the repository deliberately has no `hooks/hooks.json`, which Claude Code would load alongside the Claude hook. The hook command resolves packaged files through `${CLAUDE_PLUGIN_ROOT}`, which Claude Code supplies for the installed plugin; do not replace it with an author's machine-specific path. The local host must provide `python3` on `PATH`; the plugin does not bundle a Python runtime. Claude Code has no separate hook trust step for plugins: installing the plugin at a scope is the review and trust decision, so inspect the details pane and `hooks/claude-code.json` before installing. Project-scope plugins additionally follow workspace trust.
+
+Plugin skills carry the plugin prefix: invoke the skill as `/agent-task-namer:agent-task-namer`. Description matching works as before. Plugins installed for the user are shared between the terminal and Claude Desktop's local Code sessions; the Desktop plugin browser is under **+ › Plugins**.
+
+Do not run the plugin hook and a standalone `SessionStart` hook for this skill at the same time. Claude Code merges plugin hooks with user and project hooks, so both would fire on every new session and the agent would receive two reminders. When migrating from the [standalone configuration](#claude-sessionstart-hook), inspect the active `hooks.SessionStart` entries in `~/.claude/settings.json` and project settings, and remove only the previous `agent-task-namer` naming-hook entry before installing the plugin. Preserve unrelated hooks and settings. A standalone copy under `~/.claude/skills/agent-task-namer/` can stay for `/agent-task-namer` invocation, but keep only one hook source.
+
+To disable automatic naming while retaining on-demand naming, disable the plugin in `/plugin` or with `claude plugin disable agent-task-namer@agent-task-namer`; that also removes its skill from use until re-enabled. To receive a new release, run `/plugin marketplace update agent-task-namer` and then update the plugin from the **Installed** tab; the plugin version follows `.claude-plugin/plugin.json`. Verify activation in a dedicated new session; installation alone is not verification.
+
 ## Claude Code local installation
 
-Install the repository's `skills/agent-task-namer/` directory at `~/.claude/skills/agent-task-namer/`. The installed directory contains `SKILL.md` and `scripts/` directly, without an extra nested `skills/` directory. Existing standalone copies retain their script paths; symlinks into the old repository root must point to the new skill directory. Preserve any existing files and compare them before updating; do not overwrite external changes. Use `agent-task-namer` for the repository and skill directory, and `/agent-task-namer` for Claude invocation.
+Use this when the plugin marketplace is unavailable. Install the repository's `skills/agent-task-namer/` directory at `~/.claude/skills/agent-task-namer/`. The installed directory contains `SKILL.md` and `scripts/` directly, without an extra nested `skills/` directory. Existing standalone copies retain their script paths; symlinks into the old repository root must point to the new skill directory. Preserve any existing files and compare them before updating; do not overwrite external changes. Use `agent-task-namer` for the repository and skill directory, and `/agent-task-namer` for Claude invocation.
 
 ### Desktop Code
 
 For local sessions in the Desktop app's **Code** tab, use the [native current-session tools](claude-desktop.md). No SDK environment is required. The Desktop app ships its own Claude Code runtime, so the terminal's `claude --version` does not establish Desktop capabilities. Check the tools exposed in the actual session. Desktop local sessions load `~/.claude/skills/` and share hook settings with the CLI; see the official [Desktop shared configuration](https://code.claude.com/docs/en/desktop#shared-configuration).
 
-For automatic naming, configure the [SessionStart hook below](#claude-sessionstart-hook). Installing the Codex plugin does not install a Claude Skill or register a Claude hook. A terminal SDK rename does not update the Desktop sidebar reliably; do not use it as a fallback for missing Desktop tools.
+For automatic naming, install the [Claude Code plugin](#claude-code-plugin-installation) or configure the [SessionStart hook below](#claude-sessionstart-hook), not both. Installing the Codex plugin does not install a Claude Skill or register a Claude hook; the Claude Code plugin does. A terminal SDK rename does not update the Desktop sidebar reliably; do not use it as a fallback for missing Desktop tools.
 
 ## Claude Code local CLI setup
 
@@ -84,7 +103,7 @@ Check `claude --version` and the documented capabilities of the actual executabl
 
 ## Claude SessionStart hook
 
-First use a dedicated test project: put the hook in that project's `.claude/settings.local.json`, or pass a settings file to the CLI with `claude --settings /absolute/path/test-settings.json`. Review the workspace through Claude's normal trust flow. After testing, merge only the entry below into `~/.claude/settings.json`, preserving other settings and hooks. Remove the same naming-hook entry from the test project's settings, or stop passing the temporary CLI settings file, so both sources do not run it. Replace the interpreter and script paths with verified absolute paths and quote paths with spaces:
+This manual configuration is for the standalone Skill. The [Claude Code plugin](#claude-code-plugin-installation) bundles the same hook, so skip this section when the plugin is installed. First use a dedicated test project: put the hook in that project's `.claude/settings.local.json`, or pass a settings file to the CLI with `claude --settings /absolute/path/test-settings.json`. Review the workspace through Claude's normal trust flow. After testing, merge only the entry below into `~/.claude/settings.json`, preserving other settings and hooks. Remove the same naming-hook entry from the test project's settings, or stop passing the temporary CLI settings file, so both sources do not run it. Replace the interpreter and script paths with verified absolute paths and quote paths with spaces:
 
 ```json
 {
